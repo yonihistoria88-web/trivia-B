@@ -1,0 +1,32 @@
+[
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Cuántos días y noches llovió durante el diluvio en tiempos de Noé?",
+    "opciones": ["A) 30 días", "B) 40 días", "C) 50 días", "D) 7 días"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Qué rey de Judá enfermó gravemente y recibió 15 años más de vida tras orar?",
+    "opciones": ["A) Josías", "B) Ezequías", "C) Asa", "D) Manasés"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿En qué ciudad nació Jesucristo?",
+    "opciones": ["A) Nazaret", "B) Jerusalén", "C) Belén", "D) Jericó"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Cuál es el libro más largo de la Biblia por número de capítulos?",
+    "opciones": ["A) Isaías", "B) Génesis", "C) Salmos", "D) Apocalipsis"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Quién escribió la mayoría de las epístolas del Nuevo Testamento?",
+    "opciones": ["A) Pedro", "B) Juan", "C) Pablo", "D) Santiago"],
+    "correcta": 2
+  }
+]
