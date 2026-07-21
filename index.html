@@ -133,10 +133,6 @@
 <body>
 
 <div class="app-container">
-  <audio id="soundTension" src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" loop></audio>
-  <audio id="soundCorrect" src="https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3"></audio>
-  <audio id="soundWrong" src="https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3"></audio>
-
   <div id="startScreen" class="screen-start">
     <h1>🎡 Trivia Bíblica</h1>
     <p>¿Preparados para poner a prueba sus conocimientos?</p>
@@ -160,13 +156,50 @@
 </div>
 
 <script>
-  const soundTension = document.getElementById('soundTension');
-  const soundCorrect = document.getElementById('soundCorrect');
-  const soundWrong = document.getElementById('soundWrong');
+  // Motor de sonido nativo
+  let audioCtx = null;
+  let tickInterval = null;
 
-  soundTension.volume = 0.35;
-  soundCorrect.volume = 0.8;
-  soundWrong.volume = 0.8;
+  function initAudio() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+  }
+
+  function playTone(freq, duration, type = 'sine') {
+    if (!audioCtx) return;
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+    gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + duration);
+  }
+
+  function playCorrectSound() {
+    initAudio();
+    playTone(523.25, 0.15); // Do
+    setTimeout(() => playTone(659.25, 0.15), 100); // Mi
+    setTimeout(() => playTone(783.99, 0.3), 200);  // Sol
+  }
+
+  function playWrongSound() {
+    initAudio();
+    playTone(300, 0.2, 'sawtooth');
+    setTimeout(() => playTone(220, 0.3, 'sawtooth'), 150);
+  }
+
+  function playTickSound() {
+    initAudio();
+    playTone(800, 0.05, 'square');
+  }
 
   let questions = [];
   let currentQuestion = null;
@@ -179,11 +212,12 @@
       const res = await fetch('preguntas.json');
       questions = await res.json();
     } catch(e) {
-      alert("Error al cargar las preguntas. Asegúrate de haber creado el archivo preguntas.json");
+      alert("Error al cargar las preguntas. Revisa el archivo preguntas.json");
     }
   }
 
   async function initGame() {
+    initAudio();
     await loadQuestions();
     if (questions.length === 0) return;
 
@@ -194,7 +228,6 @@
   }
 
   function nextQuestion() {
-    // Seleccionar pregunta aleatoria
     const randomIndex = Math.floor(Math.random() * questions.length);
     currentQuestion = questions[randomIndex];
 
@@ -219,11 +252,14 @@
     maxTime = seconds;
     timeLeft = seconds;
     clearInterval(timerInterval);
-
-    soundTension.currentTime = 0;
-    soundTension.play().catch(e => {});
+    clearInterval(tickInterval);
 
     updateTimerUI();
+
+    // Sonido de tic-tac cada segundo
+    tickInterval = setInterval(() => {
+      if (timeLeft <= 10) playTickSound();
+    }, 1000);
 
     timerInterval = setInterval(() => {
       timeLeft--;
@@ -231,6 +267,7 @@
 
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
+        clearInterval(tickInterval);
         onTimeOut();
       }
     }, 1000);
@@ -252,32 +289,30 @@
 
   function checkAnswer(selectedIndex, element) {
     clearInterval(timerInterval);
-    soundTension.pause();
+    clearInterval(tickInterval);
 
     const isCorrect = selectedIndex === currentQuestion.correcta;
 
     if (isCorrect) {
       element.classList.add('correct');
-      soundCorrect.play();
+      playCorrectSound();
       setTimeout(() => {
-        alert("¡Correcto!");
         nextQuestion();
-      }, 600);
+      }, 1000);
     } else {
       element.classList.add('wrong');
-      soundWrong.play();
+      playWrongSound();
       setTimeout(() => {
-        alert("¡Incorrecto! Pasamos a la siguiente pregunta.");
         nextQuestion();
-      }, 600);
+      }, 1000);
     }
   }
 
   function onTimeOut() {
-    soundTension.pause();
-    soundWrong.play();
-    alert("¡Tiempo agotado!");
-    nextQuestion();
+    playWrongSound();
+    setTimeout(() => {
+      nextQuestion();
+    }, 1000);
   }
 </script>
 
