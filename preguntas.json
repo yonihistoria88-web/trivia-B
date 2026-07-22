@@ -43,7 +43,7 @@
   },
   {
     "categoria": "🟢 Historia Bíblica",
-    "pregunta": "¿En cuántos días creó Dios los cielos y la tierra según el Génesis?",
+    "pregunta": "¿En cuántos ´días¨ creó Dios los cielos y la tierra según el Génesis?",
     "opciones": ["A) 5 días", "B) 6 días", "C) 7 días", "D) 10 días"],
     "correcta": 1
   },
@@ -85,13 +85,13 @@
   },
   {
     "categoria": "🔵 Personajes Bíblicos",
-    "pregunta": "¿Qué joven fue arrojado al foso de los leones por orar a Dios?",
+    "pregunta": "¿Qué profeta fue arrojado al foso de los leones por orar a Dios?",
     "opciones": ["A) Esteban", "B) Daniel", "C) Josué", "D) Samuel"],
     "correcta": 1
   },
   {
     "categoria": "🔵 Personajes Bíblicos",
-    "pregunta": "¿Quién fue el hombre más longevo mencionado en la Biblia?",
+    "pregunta": "¿Quién fue el hombre de más edad mencionado en la Biblia?",
     "opciones": ["A) Adán", "B) Matusalén", "C) Noé", "D) Enoc"],
     "correcta": 1
   },
@@ -240,7 +240,7 @@
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
-    "pregunta": "¿Quién escribió la mayoría de las epístolas del Nuevo Testamento?",
+    "pregunta": "¿Quién escribió la mayoría de las cartas del Nuevo Testamento?",
     "opciones": ["A) Pedro", "B) Juan", "C) Pablo", "D) Santiago"],
     "correcta": 2
   },
@@ -264,13 +264,13 @@
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
-    "pregunta": "¿En qué día descendió el Espíritu Santo sobre los discípulos en Jerusalén?",
+    "pregunta": "¿En qué día descendió el espíritu santo sobre los discípulos en Jerusalén?",
     "opciones": ["A) Pascua", "B) Pentecostés", "C) Tabernáculos", "D) Expiación"],
     "correcta": 1
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
-    "pregunta": "¿Qué fruto del Espíritu encabeza la lista en Gálatas 5:22?",
+    "pregunta": "¿Qué aspecto del fruto del Espíritu encabeza la lista en Gálatas 5:22?",
     "opciones": ["A) Gozo", "B) Paz", "C) Amor", "D) Fe"],
     "correcta": 2
   },
@@ -307,7 +307,7 @@
   {
     "categoria": "🟢 Historia Bíblica",
     "pregunta": "¿Qué instrumento tocaba David para calmar al rey Saúl?",
-    "opciones": ["A) Flauta", "B) Arpa / Lira", "C) Tambor", "D) Trompeta"],
+    "opciones": ["A) Flauta", "B) Arpa", "C) Tambor", "D) Trompeta"],
     "correcta": 1
   },
   {
@@ -419,7 +419,7 @@
   },
   {
     "categoria": "🟣 Libros y Profetas",
-    "pregunta": "¿Qué profeta fue llevado al cielo en un torbellino con un carro de fuego?",
+    "pregunta": "¿Qué profeta fue llevado al cielo en una tempestad de viento?",
     "opciones": ["A) Eliseo", "B) Elías", "C) Enoc", "D) Samuel"],
     "correcta": 1
   },
@@ -462,7 +462,7 @@
   {
     "categoria": "🟣 Libros y Profetas",
     "pregunta": "¿Cómo se llaman los primeros cinco libros de la Biblia en conjunto?",
-    "opciones": ["A) Pentateuco / Torá", "B) Históricos", "C) Evangelios", "D) Epístolas"],
+    "opciones": ["A) Pentateuco", "B) Históricos", "C) Evangelios", "D) Epístolas"],
     "correcta": 0
   },
   {
@@ -527,7 +527,7 @@
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
-    "pregunta": "¿Qué mandato dejó Jesús en Mateo 28 conocido como la Gran Comisión?",
+    "pregunta": "¿Qué mandato dejó Jesús en Mateo 28:19,20?",
     "opciones": ["A) Construir templos", "B) Ir y hacer discípulos a todas las naciones", "C) Guardar el día de reposo", "D) Ayunar semanalmente"],
     "correcta": 1
   },
