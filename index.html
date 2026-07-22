@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -67,6 +66,12 @@
       margin-top: 10px;
     }
 
+    .btn-main:disabled {
+      background: #9ca3af;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
     .timer-bar {
       width: 100%;
       height: 12px;
@@ -89,14 +94,18 @@
       align-items: center;
       margin-bottom: 20px;
       font-weight: bold;
+      font-size: 0.9rem;
     }
 
     .category-badge {
       background: #e0e7ff;
       color: #3730a3;
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 20px;
-      font-size: 0.85rem;
+    }
+
+    .lives-badge {
+      font-size: 1.1rem;
     }
 
     .question-card {
@@ -150,6 +159,21 @@
     }
 
     .ranking-table th { background: #f8fafc; }
+
+    .cooldown-box {
+      background: #fef2f2;
+      border: 2px dashed var(--danger);
+      padding: 16px;
+      border-radius: 12px;
+      color: #991b1b;
+      margin: 15px 0;
+    }
+
+    .cooldown-timer {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -160,7 +184,14 @@
     <h1>🎡 Trivia Bíblica</h1>
     <p>Ingresa tu nombre para comenzar:</p>
     <input type="text" id="playerName" placeholder="Tu Nombre o Apodo" maxlength="15">
-    <button class="btn-main" onclick="initGame()">¡COMENZAR JUEGO!</button>
+    
+    <div id="cooldownNotice" class="cooldown-box hidden">
+      ⏳ <strong>¡Sin vidas disponibles!</strong>
+      <p style="margin: 5px 0;">Debes esperar para volver a jugar:</p>
+      <div id="cooldownTimer" class="cooldown-timer">15:00</div>
+    </div>
+
+    <button id="startBtn" class="btn-main" onclick="initGame()">¡COMENZAR JUEGO!</button>
   </div>
 
   <!-- Pantalla de Juego -->
@@ -170,6 +201,7 @@
     </div>
 
     <div class="header-info">
+      <span id="livesBadge" class="lives-badge">❤️❤️❤️</span>
       <span id="categoryBadge" class="category-badge">Cargando...</span>
       <span id="scoreBadge">⭐ 0 pts</span>
       <span id="timerText">⏱️ 90s</span>
@@ -181,7 +213,7 @@
 
   <!-- Pantalla de Fin de Juego y Ranking -->
   <div id="endScreen" class="screen hidden">
-    🏆 <h2>¡Juego Terminado!</h2>
+    <h2 id="endTitle">🏆 ¡Juego Terminado!</h2>
     <p id="finalScoreText">Obtuviste 0 puntos</p>
     
     <h3>🥇 Tabla de Posiciones</h3>
@@ -196,7 +228,7 @@
       <tbody id="rankingBody"></tbody>
     </table>
 
-    <button class="btn-main" onclick="resetToStart()">Jugar de Nuevo</button>
+    <button class="btn-main" onclick="resetToStart()">Volver al Inicio</button>
   </div>
 </div>
 
@@ -250,9 +282,64 @@
   
   let currentPlayer = "";
   let totalScore = 0;
+  let lives = 3;
+  
+  const COOLDOWN_MINUTES = 15; // Tiempo de espera en minutos
+  let cooldownInterval = null;
 
   function limpiarOpcion(texto) {
     return texto.replace(/^[A-Da-d][\.\)\-]\s*/, '');
+  }
+
+  // Comprobar bloqueo al cargar la pantalla
+  window.onload = function() {
+    checkCooldown();
+  };
+
+  function checkCooldown() {
+    const lockTime = localStorage.getItem('trivia_lock_time');
+    if (lockTime) {
+      const now = new Date().getTime();
+      const diffSeconds = Math.floor((parseInt(lockTime) - now) / 1000);
+
+      if (diffSeconds > 0) {
+        startCooldownTimer(diffSeconds);
+        return true;
+      } else {
+        localStorage.removeItem('trivia_lock_time');
+        document.getElementById('cooldownNotice').classList.add('hidden');
+        document.getElementById('startBtn').disabled = false;
+      }
+    }
+    return false;
+  }
+
+  function startCooldownTimer(secondsLeft) {
+    document.getElementById('cooldownNotice').classList.remove('hidden');
+    document.getElementById('startBtn').disabled = true;
+
+    clearInterval(cooldownInterval);
+
+    function updateDisplay(secs) {
+      const mins = Math.floor(secs / 60);
+      const remainingSecs = secs % 60;
+      document.getElementById('cooldownTimer').innerText = 
+        `${mins.toString().padStart(2, '0')}:${remainingSecs.toString().padStart(2, '0')}`;
+    }
+
+    updateDisplay(secondsLeft);
+
+    cooldownInterval = setInterval(() => {
+      secondsLeft--;
+      if (secondsLeft <= 0) {
+        clearInterval(cooldownInterval);
+        localStorage.removeItem('trivia_lock_time');
+        document.getElementById('cooldownNotice').classList.add('hidden');
+        document.getElementById('startBtn').disabled = false;
+      } else {
+        updateDisplay(secondsLeft);
+      }
+    }, 1000);
   }
 
   async function loadQuestions() {
@@ -265,6 +352,8 @@
   }
 
   async function initGame() {
+    if (checkCooldown()) return;
+
     const nameInput = document.getElementById('playerName').value.trim();
     if (!nameInput) {
       alert("Por favor ingresa un nombre para jugar.");
@@ -273,6 +362,7 @@
 
     currentPlayer = nameInput;
     totalScore = 0;
+    lives = 3;
     askedQuestions = [];
 
     initAudio();
@@ -283,6 +373,7 @@
     document.getElementById('endScreen').classList.add('hidden');
     document.getElementById('gameScreen').classList.remove('hidden');
 
+    updateLivesUI();
     updateScoreUI();
     nextQuestion();
   }
@@ -295,11 +386,24 @@
     return 0;
   }
 
+  function updateLivesUI() {
+    let hearts = "";
+    for (let i = 0; i < 3; i++) {
+      hearts += i < lives ? "❤️" : "🖤";
+    }
+    document.getElementById('livesBadge').innerText = hearts;
+  }
+
   function nextQuestion() {
+    if (lives <= 0) {
+      triggerCooldownAndEnd();
+      return;
+    }
+
     const availableQuestions = questions.filter((_, idx) => !askedQuestions.includes(idx));
 
     if (availableQuestions.length === 0) {
-      finishGame();
+      finishGame(false); // Ganó/Completó las preguntas
       return;
     }
 
@@ -388,6 +492,8 @@
     } else {
       element.classList.add('wrong');
       playWrongSound();
+      lives--;
+      updateLivesUI();
     }
 
     setTimeout(() => {
@@ -397,14 +503,30 @@
 
   function onTimeOut() {
     playWrongSound();
+    lives--;
+    updateLivesUI();
     setTimeout(() => {
       nextQuestion();
     }, 1200);
   }
 
-  function finishGame() {
+  function triggerCooldownAndEnd() {
+    // Calcular tiempo futuro de desbloqueo (15 minutos desde ahora)
+    const unlockTime = new Date().getTime() + (COOLDOWN_MINUTES * 60 * 1000);
+    localStorage.setItem('trivia_lock_time', unlockTime.toString());
+
+    finishGame(true); // Perdió por vidas
+  }
+
+  function finishGame(lostByLives) {
     document.getElementById('gameScreen').classList.add('hidden');
     document.getElementById('endScreen').classList.remove('hidden');
+
+    if (lostByLives) {
+      document.getElementById('endTitle').innerText = "💔 ¡Te has quedado sin vidas!";
+    } else {
+      document.getElementById('endTitle').innerText = "🏆 ¡Completaste todas las preguntas!";
+    }
 
     document.getElementById('finalScoreText').innerText = `${currentPlayer}, tu puntaje final fue: ${totalScore} puntos.`;
 
@@ -414,19 +536,12 @@
   function saveAndRenderRanking(name, score) {
     let ranking = JSON.parse(localStorage.getItem('trivia_ranking')) || [];
 
-    // Agregar nueva puntuación
     ranking.push({ name, score, date: new Date().toLocaleDateString() });
-
-    // Ordenar de MAYOR a MENOR puntaje
     ranking.sort((a, b) => b.score - a.score);
-
-    // Conservar solo el Top 10
     ranking = ranking.slice(0, 10);
 
-    // Guardar nuevamente
     localStorage.setItem('trivia_ranking', JSON.stringify(ranking));
 
-    // Renderizar en la tabla HTML
     const tbody = document.getElementById('rankingBody');
     tbody.innerHTML = '';
 
@@ -444,6 +559,7 @@
   function resetToStart() {
     document.getElementById('endScreen').classList.add('hidden');
     document.getElementById('startScreen').classList.remove('hidden');
+    checkCooldown();
   }
 </script>
 
