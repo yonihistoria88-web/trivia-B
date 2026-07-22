@@ -395,7 +395,7 @@
   },
   {
     "categoria": "🟡 Evangelios y Jesús",
-    "pregunta": "¿Qué personaje fue obligado a llevar la cruz de Jesús camino al Gólgota?",
+    "pregunta": "¿Qué personaje fue obligado a llevar el madero de Jesús camino al Gólgota?",
     "opciones": ["A) Simón de Cirene", "B) José de Arimatea", "C) Barrabás", "D) Cornelio"],
     "correcta": 0
   },
@@ -485,7 +485,7 @@
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
-    "pregunta": "¿Qué joven pastor y colaborador cercano fue discípulo de Pablo y recibió dos epístolas?",
+    "pregunta": "¿Qué joven colaborador cercano fue discípulo de Pablo y recibió dos cartas?",
     "opciones": ["A) Tito", "B) Timoteo", "C) Silas", "D) Barnabé"],
     "correcta": 1
   },
@@ -515,9 +515,9 @@
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
-    "pregunta": "¿Quién escribió la epístola a los Hebreos según la tradición bíblica más común?",
+    "pregunta": "¿Quién escribió la carta a los Hebreos según la tradición bíblica más común?",
     "opciones": ["A) Pablo", "B) Pedro", "C) Santiago", "D) Anónimo / Desconocido"],
-    "correcta": 3
+    "correcta": 0
   },
   {
     "categoria": "🔴 Cartas y Doctrina",
