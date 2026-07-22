@@ -41,10 +41,10 @@
     .screen { text-align: center; }
     .hidden { display: none !important; }
 
-    input[type="text"] {
+    input[type="text"], input[type="password"] {
       width: 100%;
       padding: 12px;
-      margin: 12px 0;
+      margin: 8px 0;
       border: 2px solid #e2e8f0;
       border-radius: 10px;
       font-size: 1rem;
@@ -64,6 +64,19 @@
       width: 100%;
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
       margin-top: 10px;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #475569;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 12px;
+      width: 100%;
     }
 
     .btn-main:disabled {
@@ -145,7 +158,6 @@
       color: #b91c1c;
     }
 
-    /* Tabla de Ranking */
     .ranking-table {
       width: 100%;
       border-collapse: collapse;
@@ -174,16 +186,24 @@
       font-weight: bold;
       margin-top: 5px;
     }
+
+    .user-tag {
+      font-size: 0.85rem;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
 
 <div class="app-container">
-  <!-- Pantalla de Inicio -->
+  <!-- Pantalla de Inicio / Login -->
   <div id="startScreen" class="screen">
     <h1>🎡 Trivia Bíblica</h1>
-    <p>Ingresa tu nombre para comenzar:</p>
-    <input type="text" id="playerName" placeholder="Tu Nombre o Apodo" maxlength="15">
+    <p>Inicia sesión o regístrate para jugar:</p>
+    
+    <input type="text" id="playerName" placeholder="Usuario / Apodo" maxlength="15">
+    <input type="password" id="playerPass" placeholder="Contraseña">
     
     <div id="cooldownNotice" class="cooldown-box hidden">
       ⏳ <strong>¡Sin vidas disponibles!</strong>
@@ -191,7 +211,7 @@
       <div id="cooldownTimer" class="cooldown-timer">15:00</div>
     </div>
 
-    <button id="startBtn" class="btn-main" onclick="initGame()">¡COMENZAR JUEGO!</button>
+    <button id="startBtn" class="btn-main" onclick="handleLoginAndStart()">INGRESAR Y JUGAR</button>
   </div>
 
   <!-- Pantalla de Juego -->
@@ -199,6 +219,8 @@
     <div class="timer-bar">
       <div id="timerProgress" class="timer-progress"></div>
     </div>
+
+    <div class="user-tag" id="userDisplayTag">Jugador: -</div>
 
     <div class="header-info">
       <span id="livesBadge" class="lives-badge">❤️❤️❤️</span>
@@ -222,13 +244,14 @@
         <tr>
           <th>#</th>
           <th>Jugador</th>
-          <th>Puntos</th>
+          <th>Mejor Puntaje</th>
         </tr>
       </thead>
       <tbody id="rankingBody"></tbody>
     </table>
 
-    <button class="btn-main" onclick="resetToStart()">Volver al Inicio</button>
+    <button class="btn-main" onclick="resetToStart()">Cerrar Sesión / Volver</button>
+    <button class="btn-secondary" onclick="clearRanking()">🗑️ Borrar Todo el Ranking</button>
   </div>
 </div>
 
@@ -284,20 +307,47 @@
   let totalScore = 0;
   let lives = 3;
   
-  const COOLDOWN_MINUTES = 15; // Tiempo de espera en minutos
+  const COOLDOWN_MINUTES = 15;
   let cooldownInterval = null;
 
   function limpiarOpcion(texto) {
     return texto.replace(/^[A-Da-d][\.\)\-]\s*/, '');
   }
 
-  // Comprobar bloqueo al cargar la pantalla
-  window.onload = function() {
-    checkCooldown();
-  };
+  function handleLoginAndStart() {
+    const user = document.getElementById('playerName').value.trim();
+    const pass = document.getElementById('playerPass').value.trim();
+
+    if (!user || !pass) {
+      alert("Por favor ingresa tanto tu usuario como tu contraseña.");
+      return;
+    }
+
+    let usersDB = JSON.parse(localStorage.getItem('trivia_users')) || {};
+
+    // Validar si el usuario ya existe
+    if (usersDB[user]) {
+      if (usersDB[user] !== pass) {
+        alert("Contraseña incorrecta para el usuario: " + user);
+        return;
+      }
+    } else {
+      // Registrar nuevo usuario
+      usersDB[user] = pass;
+      localStorage.setItem('trivia_users', JSON.stringify(usersDB));
+      alert("¡Usuario registrado con éxito! Bienvenido, " + user);
+    }
+
+    currentPlayer = user;
+    document.getElementById('userDisplayTag').innerText = "Jugador: " + currentPlayer;
+
+    if (checkCooldown()) return;
+    initGame();
+  }
 
   function checkCooldown() {
-    const lockTime = localStorage.getItem('trivia_lock_time');
+    if (!currentPlayer) return false;
+    const lockTime = localStorage.getItem('trivia_lock_' + currentPlayer);
     if (lockTime) {
       const now = new Date().getTime();
       const diffSeconds = Math.floor((parseInt(lockTime) - now) / 1000);
@@ -306,7 +356,7 @@
         startCooldownTimer(diffSeconds);
         return true;
       } else {
-        localStorage.removeItem('trivia_lock_time');
+        localStorage.removeItem('trivia_lock_' + currentPlayer);
         document.getElementById('cooldownNotice').classList.add('hidden');
         document.getElementById('startBtn').disabled = false;
       }
@@ -333,7 +383,7 @@
       secondsLeft--;
       if (secondsLeft <= 0) {
         clearInterval(cooldownInterval);
-        localStorage.removeItem('trivia_lock_time');
+        localStorage.removeItem('trivia_lock_' + currentPlayer);
         document.getElementById('cooldownNotice').classList.add('hidden');
         document.getElementById('startBtn').disabled = false;
       } else {
@@ -352,15 +402,6 @@
   }
 
   async function initGame() {
-    if (checkCooldown()) return;
-
-    const nameInput = document.getElementById('playerName').value.trim();
-    if (!nameInput) {
-      alert("Por favor ingresa un nombre para jugar.");
-      return;
-    }
-
-    currentPlayer = nameInput;
     totalScore = 0;
     lives = 3;
     askedQuestions = [];
@@ -403,7 +444,7 @@
     const availableQuestions = questions.filter((_, idx) => !askedQuestions.includes(idx));
 
     if (availableQuestions.length === 0) {
-      finishGame(false); // Ganó/Completó las preguntas
+      finishGame(false);
       return;
     }
 
@@ -511,11 +552,9 @@
   }
 
   function triggerCooldownAndEnd() {
-    // Calcular tiempo futuro de desbloqueo (15 minutos desde ahora)
     const unlockTime = new Date().getTime() + (COOLDOWN_MINUTES * 60 * 1000);
-    localStorage.setItem('trivia_lock_time', unlockTime.toString());
-
-    finishGame(true); // Perdió por vidas
+    localStorage.setItem('trivia_lock_' + currentPlayer, unlockTime.toString());
+    finishGame(true);
   }
 
   function finishGame(lostByLives) {
@@ -536,14 +575,34 @@
   function saveAndRenderRanking(name, score) {
     let ranking = JSON.parse(localStorage.getItem('trivia_ranking')) || [];
 
-    ranking.push({ name, score, date: new Date().toLocaleDateString() });
+    const existingPlayerIndex = ranking.findIndex(
+      item => item.name.toLowerCase() === name.toLowerCase()
+    );
+
+    if (existingPlayerIndex !== -1) {
+      if (score > ranking[existingPlayerIndex].score) {
+        ranking[existingPlayerIndex].score = score;
+      }
+    } else {
+      ranking.push({ name, score });
+    }
+
     ranking.sort((a, b) => b.score - a.score);
     ranking = ranking.slice(0, 10);
 
     localStorage.setItem('trivia_ranking', JSON.stringify(ranking));
 
+    renderRankingTable(ranking);
+  }
+
+  function renderRankingTable(ranking) {
     const tbody = document.getElementById('rankingBody');
     tbody.innerHTML = '';
+
+    if (ranking.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">El ranking está vacío</td></tr>';
+      return;
+    }
 
     ranking.forEach((player, index) => {
       const row = document.createElement('tr');
@@ -556,10 +615,20 @@
     });
   }
 
+  function clearRanking() {
+    if (confirm("¿Estás seguro de que deseas borrar todo el ranking y las cuentas de usuarios?")) {
+      localStorage.removeItem('trivia_ranking');
+      localStorage.removeItem('trivia_users');
+      renderRankingTable([]);
+    }
+  }
+
   function resetToStart() {
     document.getElementById('endScreen').classList.add('hidden');
     document.getElementById('startScreen').classList.remove('hidden');
-    checkCooldown();
+    document.getElementById('playerPass').value = '';
+    document.getElementById('cooldownNotice').classList.add('hidden');
+    document.getElementById('startBtn').disabled = false;
   }
 </script>
 
