@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -38,12 +39,18 @@
       position: relative;
     }
 
-    .screen-start {
+    .screen { text-align: center; }
+    .hidden { display: none !important; }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      margin: 12px 0;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-sizing: border-box;
       text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
     }
 
     .btn-main {
@@ -57,9 +64,8 @@
       cursor: pointer;
       width: 100%;
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+      margin-top: 10px;
     }
-
-    .screen-game { display: none; }
 
     .timer-bar {
       width: 100%;
@@ -98,6 +104,7 @@
       margin-bottom: 24px;
       line-height: 1.4;
       font-weight: 600;
+      text-align: left;
     }
 
     .options-grid {
@@ -128,30 +135,68 @@
       border-color: var(--danger);
       color: #b91c1c;
     }
+
+    /* Tabla de Ranking */
+    .ranking-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    .ranking-table th, .ranking-table td {
+      padding: 10px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+    }
+
+    .ranking-table th { background: #f8fafc; }
   </style>
 </head>
 <body>
 
 <div class="app-container">
-  <div id="startScreen" class="screen-start">
+  <!-- Pantalla de Inicio -->
+  <div id="startScreen" class="screen">
     <h1>🎡 Trivia Bíblica</h1>
-    <p>¿Preparados para poner a prueba sus conocimientos?</p>
+    <p>Ingresa tu nombre para comenzar:</p>
+    <input type="text" id="playerName" placeholder="Tu Nombre o Apodo" maxlength="15">
     <button class="btn-main" onclick="initGame()">¡COMENZAR JUEGO!</button>
   </div>
 
-  <div id="gameScreen" class="screen-game">
+  <!-- Pantalla de Juego -->
+  <div id="gameScreen" class="screen hidden">
     <div class="timer-bar">
       <div id="timerProgress" class="timer-progress"></div>
     </div>
 
     <div class="header-info">
       <span id="categoryBadge" class="category-badge">Cargando...</span>
+      <span id="scoreBadge">⭐ 0 pts</span>
       <span id="timerText">⏱️ 90s</span>
     </div>
 
     <div class="question-card" id="questionText">Cargando pregunta...</div>
-
     <div class="options-grid" id="optionsContainer"></div>
+  </div>
+
+  <!-- Pantalla de Fin de Juego y Ranking -->
+  <div id="endScreen" class="screen hidden">
+    🏆 <h2>¡Juego Terminado!</h2>
+    <p id="finalScoreText">Obtuviste 0 puntos</p>
+    
+    <h3>🥇 Tabla de Posiciones</h3>
+    <table class="ranking-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Jugador</th>
+          <th>Puntos</th>
+        </tr>
+      </thead>
+      <tbody id="rankingBody"></tbody>
+    </table>
+
+    <button class="btn-main" onclick="resetToStart()">Jugar de Nuevo</button>
   </div>
 </div>
 
@@ -160,12 +205,8 @@
   let tickInterval = null;
 
   function initAudio() {
-    if (!audioCtx) {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    }
-    if (audioCtx.state === 'suspended') {
-      audioCtx.resume();
-    }
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
   }
 
   function playTone(freq, duration, type = 'sine') {
@@ -206,8 +247,10 @@
   let timeLeft = 90;
   let maxTime = 90;
   let timerInterval;
+  
+  let currentPlayer = "";
+  let totalScore = 0;
 
-  // Función para quitar prefijos como "A)", "B.", "a.-", etc. si los hubiese en el texto
   function limpiarOpcion(texto) {
     return texto.replace(/^[A-Da-d][\.\)\-]\s*/, '');
   }
@@ -217,30 +260,46 @@
       const res = await fetch('preguntas.json');
       questions = await res.json();
     } catch(e) {
-      alert("Error al cargar las preguntas. Revisa el archivo preguntas.json");
+      alert("Error al cargar preguntas.json");
     }
   }
 
   async function initGame() {
+    const nameInput = document.getElementById('playerName').value.trim();
+    if (!nameInput) {
+      alert("Por favor ingresa un nombre para jugar.");
+      return;
+    }
+
+    currentPlayer = nameInput;
+    totalScore = 0;
+    askedQuestions = [];
+
     initAudio();
     await loadQuestions();
     if (questions.length === 0) return;
 
-    askedQuestions = [];
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('endScreen').classList.add('hidden');
+    document.getElementById('gameScreen').classList.remove('hidden');
 
-    document.getElementById('startScreen').style.display = 'none';
-    document.getElementById('gameScreen').style.display = 'block';
-
+    updateScoreUI();
     nextQuestion();
   }
 
+  function calculatePoints(secondsTaken) {
+    if (secondsTaken <= 10) return 10;
+    if (secondsTaken <= 30) return 7;
+    if (secondsTaken <= 60) return 5;
+    if (secondsTaken <= 90) return 3;
+    return 0;
+  }
+
   function nextQuestion() {
-    const availableQuestions = questions.filter((_, index) => !askedQuestions.includes(index));
+    const availableQuestions = questions.filter((_, idx) => !askedQuestions.includes(idx));
 
     if (availableQuestions.length === 0) {
-      alert("¡Felicidades! Has respondido todas las preguntas de la trivia.");
-      document.getElementById('startScreen').style.display = 'flex';
-      document.getElementById('gameScreen').style.display = 'none';
+      finishGame();
       return;
     }
 
@@ -256,7 +315,6 @@
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
 
-    // Mapear opciones, limpiar prefijos de letras y mezclar
     let optionsWithIndex = currentQuestion.opciones.map((op, idx) => ({
       texto: limpiarOpcion(op),
       esCorrecta: idx === currentQuestion.correcta
@@ -270,7 +328,7 @@
     optionsWithIndex.forEach((item) => {
       const btn = document.createElement('button');
       btn.className = 'btn-option';
-      btn.innerText = item.texto; // Solo el texto limpio
+      btn.innerText = item.texto;
       btn.onclick = () => checkAnswer(item.esCorrecta, btn);
       container.appendChild(btn);
     });
@@ -306,42 +364,89 @@
     const progressPercent = (timeLeft / maxTime) * 100;
     const progressBar = document.getElementById('timerProgress');
     progressBar.style.width = progressPercent + '%';
-
-    if (progressPercent <= 30) {
-      progressBar.style.backgroundColor = 'var(--danger)';
-    } else {
-      progressBar.style.backgroundColor = 'var(--primary)';
-    }
-
+    progressBar.style.backgroundColor = progressPercent <= 30 ? 'var(--danger)' : 'var(--primary)';
     document.getElementById('timerText').innerText = `⏱️ ${timeLeft}s`;
+  }
+
+  function updateScoreUI() {
+    document.getElementById('scoreBadge').innerText = `⭐ ${totalScore} pts`;
   }
 
   function checkAnswer(isCorrect, element) {
     clearInterval(timerInterval);
     clearInterval(tickInterval);
 
+    const secondsTaken = maxTime - timeLeft;
+
     if (isCorrect) {
+      const pts = calculatePoints(secondsTaken);
+      totalScore += pts;
+      updateScoreUI();
+
       element.classList.add('correct');
       playCorrectSound();
-      setTimeout(() => {
-        nextQuestion();
-      }, 1000);
     } else {
       element.classList.add('wrong');
       playWrongSound();
-      setTimeout(() => {
-        nextQuestion();
-      }, 1000);
     }
+
+    setTimeout(() => {
+      nextQuestion();
+    }, 1200);
   }
 
   function onTimeOut() {
     playWrongSound();
     setTimeout(() => {
       nextQuestion();
-    }, 1000);
+    }, 1200);
+  }
+
+  function finishGame() {
+    document.getElementById('gameScreen').classList.add('hidden');
+    document.getElementById('endScreen').classList.remove('hidden');
+
+    document.getElementById('finalScoreText').innerText = `${currentPlayer}, tu puntaje final fue: ${totalScore} puntos.`;
+
+    saveAndRenderRanking(currentPlayer, totalScore);
+  }
+
+  function saveAndRenderRanking(name, score) {
+    let ranking = JSON.parse(localStorage.getItem('trivia_ranking')) || [];
+
+    // Agregar nueva puntuación
+    ranking.push({ name, score, date: new Date().toLocaleDateString() });
+
+    // Ordenar de MAYOR a MENOR puntaje
+    ranking.sort((a, b) => b.score - a.score);
+
+    // Conservar solo el Top 10
+    ranking = ranking.slice(0, 10);
+
+    // Guardar nuevamente
+    localStorage.setItem('trivia_ranking', JSON.stringify(ranking));
+
+    // Renderizar en la tabla HTML
+    const tbody = document.getElementById('rankingBody');
+    tbody.innerHTML = '';
+
+    ranking.forEach((player, index) => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td><strong>${index + 1}º</strong></td>
+        <td>${player.name}</td>
+        <td><strong>${player.score} pts</strong></td>
+      `;
+      tbody.appendChild(row);
+    });
+  }
+
+  function resetToStart() {
+    document.getElementById('endScreen').classList.add('hidden');
+    document.getElementById('startScreen').classList.remove('hidden');
   }
 </script>
 
 </body>
 </html>
+
