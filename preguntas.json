@@ -6,9 +6,117 @@
     "correcta": 1
   },
   {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿En qué monte descendió el fuego de Dios tras la oración de Elías?",
+    "opciones": ["A) Monte Sinaí", "B) Monte Carmelo", "C) Monte Horeb", "D) Monte de los Olivos"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Cuántos años vagó el pueblo de Israel por el desierto?",
+    "opciones": ["A) 20 años", "B) 30 años", "C) 40 años", "D) 50 años"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué mar se dividió en dos para que el pueblo de Israel cruzara en seco?",
+    "opciones": ["A) Mar Muerto", "B) Mar Rojo", "C) Mar de Galilea", "D) Mar Mediterráneo"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué ciudad cayó tras dar el pueblo vueltas a sus murallas durante 7 días?",
+    "opciones": ["A) Jericó", "B) Babilonia", "C) Nínive", "D) Sodoma"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Quién construyó el primer Templo de Jerusalén?",
+    "opciones": ["A) David", "B) Salomón", "C) Roboam", "D) Ezequías"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué comida envió Dios del cielo al pueblo en el desierto?",
+    "opciones": ["A) Trigo", "B) Maná", "C) Higos", "D) Cebada"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿En cuántos días creó Dios los cielos y la tierra según el Génesis?",
+    "opciones": ["A) 5 días", "B) 6 días", "C) 7 días", "D) 10 días"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué imperio llevó cautivo al reino de Judá a Babilonia?",
+    "opciones": ["A) Asirio", "B) Babilónico", "C) Persa", "D) Romano"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué reina visitó a Salomón para comprobar su gran sabiduría?",
+    "opciones": ["A) Reina de Saba", "B) Ester", "C) Vasti", "D) Jezabel"],
+    "correcta": 0
+  },
+  {
     "categoria": "🔵 Personajes Bíblicos",
     "pregunta": "¿Qué rey de Judá enfermó gravemente y recibió 15 años más de vida tras orar?",
     "opciones": ["A) Josías", "B) Ezequías", "C) Asa", "D) Manasés"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién fue vendido por sus hermanos como esclavo hacia Egipto?",
+    "opciones": ["A) Benjamín", "B) José", "C) Judá", "D) Rubén"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién derrotó al gigante Goliat con una honda y una piedra?",
+    "opciones": ["A) Saúl", "B) Jonatán", "C) David", "D) Salomón"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿A quién tragó un gran pez por desobedecer el mandato de ir a Nínive?",
+    "opciones": ["A) Jonás", "B) Daniel", "C) Oseas", "D) Amós"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Qué joven fue arrojado al foso de los leones por orar a Dios?",
+    "opciones": ["A) Esteban", "B) Daniel", "C) Josué", "D) Samuel"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién fue el hombre más longevo mencionado en la Biblia?",
+    "opciones": ["A) Adán", "B) Matusalén", "C) Noé", "D) Enoc"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién fue la esposa de Abraham y madre de Isaac?",
+    "opciones": ["A) Sara", "B) Rebeca", "C) Raquel", "D) Lea"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Qué juez israelita poseía una fuerza extraordinaria dada por su cabello?",
+    "opciones": ["A) Gedeón", "B) Sansón", "C) Jefté", "D) Barac"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién fue el primer rey del reino unido de Israel?",
+    "opciones": ["A) David", "B) Saúl", "C) Salomón", "D) Samuel"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Qué mujer judía llegó a ser reina de Persia y salvó a su pueblo?",
+    "opciones": ["A) Rut", "B) Ester", "C) Abigail", "D) Débora"],
     "correcta": 1
   },
   {
@@ -18,15 +126,416 @@
     "correcta": 2
   },
   {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Cuántos discípulos o apóstoles escogió Jesús originalmente?",
+    "opciones": ["A) 7", "B) 10", "C) 12", "D) 70"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Cuál fue el primer milagro registrado de Jesús?",
+    "opciones": ["A) Caminar sobre el agua", "B) Convertir el agua en vino", "C) Sanar a un ciego", "D) Multiplicar los panes"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿En qué río fue bautizado Jesús por Juan el Bautista?",
+    "opciones": ["A) Río Nilo", "B) Río Jordán", "C) Río Éufrates", "D) Río Tigris"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿A los cuántos días resucitó Jesús de entre los muertos?",
+    "opciones": ["A) Al primer día", "B) Al segundo día", "C) Al tercer día", "D) A los siete días"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Quién entregó a Jesús por 30 monedas de plata?",
+    "opciones": ["A) Pedro", "B) Judas Iscariote", "C) Tomás", "D) Pilato"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Qué apóstol negó a Jesús tres veces antes de que cantara el gallo?",
+    "opciones": ["A) Juan", "B) Pedro", "C) Santiago", "D) Andrés"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿A qué amigo resucitó Jesús tras llevar cuatro días en la tumba?",
+    "opciones": ["A) Zaqueo", "B) Lázaro", "C) Bartimeo", "D) Nicodemo"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Qué profesión tenía Mateo antes de seguir a Jesús?",
+    "opciones": ["A) Pescador", "B) Cobrador de impuestos", "C) Carpintero", "D) Pastor"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿En qué monte oró Jesús antes de ser arrestado?",
+    "opciones": ["A) Monte Sinaí", "B) Monte de los Olivos / Getsemaní", "C) Monte Tabor", "D) Monte Carmelo"],
+    "correcta": 1
+  },{
     "categoria": "🟣 Libros y Profetas",
     "pregunta": "¿Cuál es el libro más largo de la Biblia por número de capítulos?",
     "opciones": ["A) Isaías", "B) Génesis", "C) Salmos", "D) Apocalipsis"],
     "correcta": 2
   },
   {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Cuál es el primer libro del Antiguo Testamento?",
+    "opciones": ["A) Éxodo", "B) Génesis", "C) Levítico", "D) Números"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Cuál es el último libro del Antiguo Testamento?",
+    "opciones": ["A) Zacarías", "B) Malaquías", "C) Sofonías", "D) Oseas"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿A qué profeta se le conoce como el profeta mesiánico por sus visiones de Cristo?",
+    "opciones": ["A) Jeremías", "B) Isaías", "C) Ezequiel", "D) Daniel"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué libro bíblico recopila proverbios y consejos de sabiduría?",
+    "opciones": ["A) Proverbios", "B) Eclesiastés", "C) Cantares", "D) Job"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Quién escribió la mayoría de los Salmos?",
+    "opciones": ["A) Salomón", "B) Moisés", "C) David", "D) Asaf"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué profeta vio una visión de un valle de huesos secos que cobraban vida?",
+    "opciones": ["A) Daniel", "B) Ezequiel", "C) Jeremías", "D) Joel"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿A qué profeta se le conoce como el 'profeta llorón'?",
+    "opciones": ["A) Jeremías", "B) Isaías", "C) Oseas", "D) Miqueas"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Cuántos libros componen el Nuevo Testamento?",
+    "opciones": ["A) 27", "B) 39", "C) 66", "D) 12"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Cuántos libros componen el Antiguo Testamento?",
+    "opciones": ["A) 27", "B) 39", "C) 66", "D) 40"],
+    "correcta": 1
+  },
+  {
     "categoria": "🔴 Cartas y Doctrina",
     "pregunta": "¿Quién escribió la mayoría de las epístolas del Nuevo Testamento?",
     "opciones": ["A) Pedro", "B) Juan", "C) Pablo", "D) Santiago"],
     "correcta": 2
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "Según 1 Corintios 13, ¿cuál es el mayor de los atributos cristianos?",
+    "opciones": ["A) La fe", "B) La esperanza", "C) El amor", "D) El conocimiento"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿En qué libro del Nuevo Testamento se menciona la Armadura de Dios?",
+    "opciones": ["A) Romanos", "B) Efesios", "C) Filipenses", "D) Colosenses"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Quién fue el primer mártir cristiano registrado en el libro de Hechos?",
+    "opciones": ["A) Esteban", "B) Felipe", "C) Santiago", "D) Pablo"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿En qué día descendió el Espíritu Santo sobre los discípulos en Jerusalén?",
+    "opciones": ["A) Pascua", "B) Pentecostés", "C) Tabernáculos", "D) Expiación"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Qué fruto del Espíritu encabeza la lista en Gálatas 5:22?",
+    "opciones": ["A) Gozo", "B) Paz", "C) Amor", "D) Fe"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Quién escribió el libro de Apocalipsis mientras estaba exiliado?",
+    "opciones": ["A) Pablo", "B) Juan", "C) Pedro", "D) Lucas"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿En qué isla estaba exiliado el apóstol Juan cuando escribió Apocalipsis?",
+    "opciones": ["A) Creta", "B) Patmos", "C) Chipre", "D) Malta"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿A quién dirigió el médico Lucas sus dos libros (Lucas y Hechos)?",
+    "opciones": ["A) Teófilo", "B) Timoteo", "C) Tito", "D) Filemón"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Cuál es la 'raíz de todos los males' según 1 Timoteo 6:10?",
+    "opciones": ["A) El orgullo", "B) El amor al dinero", "C) La mentira", "D) La envidia"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Quién fue la madre de Samuel, que oró con fervor en el tabernáculo?",
+    "opciones": ["A) Ana", "B) Penina", "C) Isabel", "D) María"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué instrumento tocaba David para calmar al rey Saúl?",
+    "opciones": ["A) Flauta", "B) Arpa / Lira", "C) Tambor", "D) Trompeta"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué señal puso Dios en el cielo como pacto de que no volvería a haber un diluvio universal?",
+    "opciones": ["A) Una estrella brillante", "B) El arco iris", "C) Una nube de fuego", "D) Un eclipse"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿Qué ciudad fue destruida junto con Gomorra por su gran maldad?",
+    "opciones": ["A) Jericó", "B) Sodoma", "C) Babilonia", "D) Tiro"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟢 Historia Bíblica",
+    "pregunta": "¿En qué convirtió Moisés su vara delante del Faraón?",
+    "opciones": ["A) En fuego", "B) En una serpiente", "C) En agua", "D) En una rama de olivo"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién fue el sobrino de Abraham que vivió en Sodoma?",
+    "opciones": ["A) Lot", "B) Labán", "C) Nacor", "D) Taré"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Qué hermano menor de José era el otro hijo de Raquel?",
+    "opciones": ["A) Dan", "B) Benjamín", "C) Neftalí", "D) Gad"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién ayudó a esconder a los espías israelitas en Jericó?",
+    "opciones": ["A) Rahab", "B) Débora", "C) Jael", "D) Tamar"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Qué juez redujo su ejército a solo 300 hombres para luchar contra los madianitas?",
+    "opciones": ["A) Sansón", "B) Gedeón", "C) Jefté", "D) Otoniel"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔵 Personajes Bíblicos",
+    "pregunta": "¿Quién sucedió a Moisés como líder del pueblo de Israel para entrar a Canaán?",
+    "opciones": ["A) Calev", "B) Aarón", "C) Josué", "D) Eleazar"],
+    "correcta": 2
+  },{
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Qué hombre bajito se subió a un árbol sicómoro para ver pasar a Jesús?",
+    "opciones": ["A) Zaqueo", "B) Nicodemo", "C) Bartimeo", "D) Simón"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿En qué mar calmó Jesús una gran tempestad cuando sus discípulos tuvieron miedo?",
+    "opciones": ["A) Mar Muerto", "B) Mar de Galilea", "C) Mar Rojo", "D) Mar Mediterráneo"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Cuántos panes y peces multiplicó Jesús para alimentar a más de 5,000 personas?",
+    "opciones": ["A) 7 panes y 2 peces", "B) 5 panes y 2 peces", "C) 3 panes y 5 peces", "D) 12 panes y 2 peces"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Quién pidió el cuerpo de Jesús a Pilato para colocarlo en su tumba nueva?",
+    "opciones": ["A) Nicodemo", "B) José de Arimatea", "C) Simón de Cirene", "D) Juan"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Qué discípulo dudó de la resurrección de Jesús hasta ver y tocar sus heridas?",
+    "opciones": ["A) Tomás", "B) Felipe", "C) Bartolomé", "D) Judas Tadeo"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿A quién se le apareció primero Jesús resucitado cerca del sepulcro?",
+    "opciones": ["A) María la madre de Jesús", "B) María Magdalena", "C) Marta", "D) Salomé"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Qué personaje fue obligado a llevar la cruz de Jesús camino al Gólgota?",
+    "opciones": ["A) Simón de Cirene", "B) José de Arimatea", "C) Barrabás", "D) Cornelio"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿En qué idioma estaba escrita la inscripción 'Rey de los Judíos' sobre la cruz, además de latín y griego?",
+    "opciones": ["A) Hebreo", "B) Arameo", "C) Egipcio", "D) Siríaco"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Cuántos años tenía Jesús aproximadamente cuando comenzó su ministerio público?",
+    "opciones": ["A) 20 años", "B) 25 años", "C) 30 años", "D) 33 años"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🟡 Evangelios y Jesús",
+    "pregunta": "¿Qué parábola enseñó Jesús para explicar quién es nuestro prójimo?",
+    "opciones": ["A) El hijo pródigo", "B) El buen samaritano", "C) El sembrador", "D) La oveja perdida"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué profeta fue llevado al cielo en un torbellino con un carro de fuego?",
+    "opciones": ["A) Eliseo", "B) Elías", "C) Enoc", "D) Samuel"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué profeta sucedió a Elías y recibió una doble porción de su espíritu?",
+    "opciones": ["A) Eliseo", "B) Oseas", "C) Joel", "D) Abdías"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué libro poético fue escrito principalmente por Salomón y habla sobre el amor?",
+    "opciones": ["A) Proverbios", "B) Cantar de los Cantares", "C) Eclesiastés", "D) Salmos"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué profeta interpretó los sueños del rey Nabucodonosor en Babilonia?",
+    "opciones": ["A) Daniel", "B) Ezequiel", "C) Nehemías", "D) Esdras"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué líder guio la reconstrucción de las murallas de Jerusalén?",
+    "opciones": ["A) Esdras", "B) Nehemías", "C) Zorobabel", "D) Hageo"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué libro de la Biblia no menciona explícitamente la palabra 'Dios'?",
+    "opciones": ["A) Rut", "B) Ester", "C) Cantares", "D) Job"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué patriarca sufrió la pérdida de su familia y bienes pero mantuvo su fe impecable?",
+    "opciones": ["A) Job", "B) Abraham", "C) Jacob", "D) Isaac"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Cómo se llaman los primeros cinco libros de la Biblia en conjunto?",
+    "opciones": ["A) Pentateuco / Torá", "B) Históricos", "C) Evangelios", "D) Epístolas"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿Qué profeta se casó con una mujer infiel por mandato divino como símbolo de Israel?",
+    "opciones": ["A) Oseas", "B) Amós", "C) Sofonías", "D) Malaquías"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🟣 Libros y Profetas",
+    "pregunta": "¿En qué libro bíblico encontramos la célebre frase 'Todo tiene su tiempo'?",
+    "opciones": ["A) Proverbios", "B) Eclesiastés", "C) Salmos", "D) Job"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Qué perseguidor de cristianos se convirtió a Cristo en el camino a Damasco?",
+    "opciones": ["A) Saulo de Tarso (Pablo)", "B) Cornelio", "C) Gamaliel", "D) Félix"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Qué joven pastor y colaborador cercano fue discípulo de Pablo y recibió dos epístolas?",
+    "opciones": ["A) Tito", "B) Timoteo", "C) Silas", "D) Barnabé"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "Según Santiago 2:26, ¿cómo está la fe si no tiene obras?",
+    "opciones": ["A) Incompleta", "B) Muerta", "C) Débil", "D) En prueba"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Qué primer centurión romano y su familia se convirtieron al cristianismo tras la predicación de Pedro?",
+    "opciones": ["A) Cornelio", "B) Julio", "C) Claudio", "D) Tito"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿En qué ciudad fueron llamados 'cristianos' por primera vez los seguidores de Jesús?",
+    "opciones": ["A) Jerusalén", "B) Antioquía", "C) Éfeso", "D) Roma"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Qué carta de Pablo trata principalmente sobre la libertad en Cristo y la ley?",
+    "opciones": ["A) Gálatas", "B) Filipenses", "C) Colosenses", "D) Filemón"],
+    "correcta": 0
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Quién escribió la epístola a los Hebreos según la tradición bíblica más común?",
+    "opciones": ["A) Pablo", "B) Pedro", "C) Santiago", "D) Anónimo / Desconocido"],
+    "correcta": 3
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Cuál es la 'espada del Espíritu' según la armadura de Dios en Efesios 6?",
+    "opciones": ["A) La oración", "B) La fe", "C) La Palabra de Dios", "D) La verdad"],
+    "correcta": 2
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Qué mandato dejó Jesús en Mateo 28 conocido como la Gran Comisión?",
+    "opciones": ["A) Construir templos", "B) Ir y hacer discípulos a todas las naciones", "C) Guardar el día de reposo", "D) Ayunar semanalmente"],
+    "correcta": 1
+  },
+  {
+    "categoria": "🔴 Cartas y Doctrina",
+    "pregunta": "¿Cuál es el resumen de toda la Ley según las palabras de Jesús en los Evangelios?",
+    "opciones": ["A) Amar a Dios y al prójimo", "B) Cumplir los Diez Mandamientos", "C) Dar el diezmo", "D) Guardar las fiestas bíblicas"],
+    "correcta": 0
   }
 ]
+
