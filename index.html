@@ -146,7 +146,7 @@
 
     <div class="header-info">
       <span id="categoryBadge" class="category-badge">Cargando...</span>
-      <span id="timerText">⏱️ 30s</span>
+      <span id="timerText">⏱️ 90s</span>
     </div>
 
     <div class="question-card" id="questionText">Cargando pregunta...</div>
@@ -202,9 +202,11 @@
   }
 
   let questions = [];
+  let askedQuestions = []; // Registro de preguntas que ya salieron
   let currentQuestion = null;
-  let timeLeft = 30;
-  let maxTime = 30;
+  let currentShuffledOptions = []; // Para saber el orden mezclado
+  let timeLeft = 90;
+  let maxTime = 90;
   let timerInterval;
 
   async function loadQuestions() {
@@ -221,6 +223,8 @@
     await loadQuestions();
     if (questions.length === 0) return;
 
+    askedQuestions = []; // Reiniciamos el historial al comenzar
+
     document.getElementById('startScreen').style.display = 'none';
     document.getElementById('gameScreen').style.display = 'block';
 
@@ -228,24 +232,51 @@
   }
 
   function nextQuestion() {
-    const randomIndex = Math.floor(Math.random() * questions.length);
-    currentQuestion = questions[randomIndex];
+    // Filtrar preguntas que NO han sido respondidas
+    const availableQuestions = questions.filter((_, index) => !askedQuestions.includes(index));
 
-    document.getElementById('categoryBadge').innerText = currentQuestion.categoria;
+    if (availableQuestions.length === 0) {
+      alert("¡Felicidades! Has respondido todas las preguntas de la trivia.");
+      document.getElementById('startScreen').style.display = 'flex';
+      document.getElementById('gameScreen').style.display = 'none';
+      return;
+    }
+
+    // Elegir una de las disponibles al azar
+    const randomIndex = Math.floor(Math.random() * availableQuestions.length);
+    currentQuestion = availableQuestions[randomIndex];
+
+    // Marcar la pregunta como ya realizada
+    const originalIndex = questions.indexOf(currentQuestion);
+    askedQuestions.push(originalIndex);
+
+    document.getElementById('categoryBadge').innerText = currentQuestion.categoria || 'General';
     document.getElementById('questionText').innerText = currentQuestion.pregunta;
 
     const container = document.getElementById('optionsContainer');
     container.innerHTML = '';
 
-    currentQuestion.opciones.forEach((opcion, index) => {
+    // Mapear opciones con sus índices originales y MEZCLARLAS
+    let optionsWithIndex = currentQuestion.opciones.map((op, idx) => ({
+      texto: op,
+      esCorrecta: idx === currentQuestion.correcta
+    }));
+
+    // Algoritmo para desordenar las opciones (Fisher-Yates)
+    for (let i = optionsWithIndex.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [optionsWithIndex[i], optionsWithIndex[j]] = [optionsWithIndex[j], optionsWithIndex[i]];
+    }
+
+    optionsWithIndex.forEach((item) => {
       const btn = document.createElement('button');
       btn.className = 'btn-option';
-      btn.innerText = opcion;
-      btn.onclick = () => checkAnswer(index, btn);
+      btn.innerText = item.texto;
+      btn.onclick = () => checkAnswer(item.esCorrecta, btn);
       container.appendChild(btn);
     });
 
-    startQuestionTimer(30);
+    startQuestionTimer(90);
   }
 
   function startQuestionTimer(seconds) {
@@ -256,7 +287,7 @@
 
     updateTimerUI();
 
-    // Sonido de tic-tac cada segundo
+    // Sonido de tic-tac los últimos 10 segundos
     tickInterval = setInterval(() => {
       if (timeLeft <= 10) playTickSound();
     }, 1000);
@@ -287,11 +318,9 @@
     document.getElementById('timerText').innerText = `⏱️ ${timeLeft}s`;
   }
 
-  function checkAnswer(selectedIndex, element) {
+  function checkAnswer(isCorrect, element) {
     clearInterval(timerInterval);
     clearInterval(tickInterval);
-
-    const isCorrect = selectedIndex === currentQuestion.correcta;
 
     if (isCorrect) {
       element.classList.add('correct');
