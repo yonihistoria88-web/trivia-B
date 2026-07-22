@@ -449,8 +449,8 @@
   },
   {
     "categoria": "🟣 Libros y Profetas",
-    "pregunta": "¿Qué libro de la Biblia no menciona explícitamente la palabra 'Dios'?",
-    "opciones": ["A) Rut", "B) Ester", "C) Cantares", "D) Job"],
+    "pregunta": "¿Cuál de estos profetas no pertence a los llamados profetas menores?",
+    "opciones": ["A) Oseas", "B) Daniel", "C) Joel", "D) Abdías"],
     "correcta": 1
   },
   {
