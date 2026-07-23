@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Trivia Bíblica Interactiva</title>
+  
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
   <style>
     :root {
       --bg-color: #f4f6f9;
@@ -66,19 +71,6 @@
       margin-top: 10px;
     }
 
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #475569;
-      border: none;
-      padding: 10px 16px;
-      border-radius: 8px;
-      font-size: 0.9rem;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 12px;
-      width: 100%;
-    }
-
     .btn-main:disabled {
       background: #9ca3af;
       box-shadow: none;
@@ -117,9 +109,7 @@
       border-radius: 20px;
     }
 
-    .lives-badge {
-      font-size: 1.1rem;
-    }
+    .lives-badge { font-size: 1.1rem; }
 
     .question-card {
       font-size: 1.15rem;
@@ -238,7 +228,7 @@
     <h2 id="endTitle">🏆 ¡Juego Terminado!</h2>
     <p id="finalScoreText">Obtuviste 0 puntos</p>
     
-    <h3>🥇 Tabla de Posiciones</h3>
+    <h3>🌍 Tabla de Posiciones Global</h3>
     <table class="ranking-table">
       <thead>
         <tr>
@@ -247,15 +237,31 @@
           <th>Mejor Puntaje</th>
         </tr>
       </thead>
-      <tbody id="rankingBody"></tbody>
+      <tbody id="rankingBody">
+        <tr><td colspan="3" style="text-align:center;">Cargando ranking global...</td></tr>
+      </tbody>
     </table>
 
     <button class="btn-main" onclick="resetToStart()">Cerrar Sesión / Volver</button>
-    <button class="btn-secondary" onclick="clearRanking()">🗑️ Borrar Todo el Ranking</button>
   </div>
 </div>
 
 <script>
+  // Configuración de Firebase integrada correctamente
+  const firebaseConfig = {
+    apiKey: "AIzaSyCw_ZmUIUICrNA83BmGm_wKm33pzN59DY8",
+    authDomain: "trivia-biblica-e174a.firebaseapp.com",
+    databaseURL: "https://trivia-biblica-e174a-default-rtdb.firebaseio.com",
+    projectId: "trivia-biblica-e174a",
+    storageBucket: "trivia-biblica-e174a.firebasestorage.app",
+    messagingSenderId: "55954319312",
+    appId: "1:55954319312:web:c2f7a599c4381bad113bd5"
+  };
+
+  // Inicializar Firebase
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+
   let audioCtx = null;
   let tickInterval = null;
 
@@ -314,8 +320,8 @@
     return texto.replace(/^[A-Da-d][\.\)\-]\s*/, '');
   }
 
-  function handleLoginAndStart() {
-    const user = document.getElementById('playerName').value.trim();
+  async function handleLoginAndStart() {
+    const user = document.getElementById('playerName').value.trim().toLowerCase();
     const pass = document.getElementById('playerPass').value.trim();
 
     if (!user || !pass) {
@@ -323,31 +329,36 @@
       return;
     }
 
-    let usersDB = JSON.parse(localStorage.getItem('trivia_users')) || {};
+    const userRef = db.ref('users/' + user);
+    const snapshot = await userRef.once('value');
+    const userData = snapshot.val();
 
-    // Validar si el usuario ya existe
-    if (usersDB[user]) {
-      if (usersDB[user] !== pass) {
+    if (userData) {
+      if (userData.password !== pass) {
         alert("Contraseña incorrecta para el usuario: " + user);
         return;
       }
     } else {
-      // Registrar nuevo usuario
-      usersDB[user] = pass;
-      localStorage.setItem('trivia_users', JSON.stringify(usersDB));
+      await userRef.set({
+        password: pass,
+        highScore: 0
+      });
       alert("¡Usuario registrado con éxito! Bienvenido, " + user);
     }
 
     currentPlayer = user;
     document.getElementById('userDisplayTag').innerText = "Jugador: " + currentPlayer;
 
-    if (checkCooldown()) return;
+    if (await checkCooldown()) return;
     initGame();
   }
 
-  function checkCooldown() {
+  async function checkCooldown() {
     if (!currentPlayer) return false;
-    const lockTime = localStorage.getItem('trivia_lock_' + currentPlayer);
+    const lockRef = db.ref('locks/' + currentPlayer);
+    const snapshot = await lockRef.once('value');
+    const lockTime = snapshot.val();
+
     if (lockTime) {
       const now = new Date().getTime();
       const diffSeconds = Math.floor((parseInt(lockTime) - now) / 1000);
@@ -356,7 +367,7 @@
         startCooldownTimer(diffSeconds);
         return true;
       } else {
-        localStorage.removeItem('trivia_lock_' + currentPlayer);
+        await lockRef.remove();
         document.getElementById('cooldownNotice').classList.add('hidden');
         document.getElementById('startBtn').disabled = false;
       }
@@ -379,11 +390,11 @@
 
     updateDisplay(secondsLeft);
 
-    cooldownInterval = setInterval(() => {
+    cooldownInterval = setInterval(async () => {
       secondsLeft--;
       if (secondsLeft <= 0) {
         clearInterval(cooldownInterval);
-        localStorage.removeItem('trivia_lock_' + currentPlayer);
+        await db.ref('locks/' + currentPlayer).remove();
         document.getElementById('cooldownNotice').classList.add('hidden');
         document.getElementById('startBtn').disabled = false;
       } else {
@@ -551,13 +562,13 @@
     }, 1200);
   }
 
-  function triggerCooldownAndEnd() {
+  async function triggerCooldownAndEnd() {
     const unlockTime = new Date().getTime() + (COOLDOWN_MINUTES * 60 * 1000);
-    localStorage.setItem('trivia_lock_' + currentPlayer, unlockTime.toString());
+    await db.ref('locks/' + currentPlayer).set(unlockTime.toString());
     finishGame(true);
   }
 
-  function finishGame(lostByLives) {
+  async function finishGame(lostByLives) {
     document.getElementById('gameScreen').classList.add('hidden');
     document.getElementById('endScreen').classList.remove('hidden');
 
@@ -569,30 +580,32 @@
 
     document.getElementById('finalScoreText').innerText = `${currentPlayer}, tu puntaje final fue: ${totalScore} puntos.`;
 
-    saveAndRenderRanking(currentPlayer, totalScore);
+    await saveAndRenderGlobalRanking(currentPlayer, totalScore);
   }
 
-  function saveAndRenderRanking(name, score) {
-    let ranking = JSON.parse(localStorage.getItem('trivia_ranking')) || [];
+  async function saveAndRenderGlobalRanking(name, score) {
+    const userRef = db.ref('users/' + name);
+    const snapshot = await userRef.once('value');
+    const userData = snapshot.val();
 
-    const existingPlayerIndex = ranking.findIndex(
-      item => item.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (existingPlayerIndex !== -1) {
-      if (score > ranking[existingPlayerIndex].score) {
-        ranking[existingPlayerIndex].score = score;
-      }
-    } else {
-      ranking.push({ name, score });
+    // Actualizar puntaje máximo si el nuevo es mayor
+    if (userData && score > (userData.highScore || 0)) {
+      await userRef.update({ highScore: score });
     }
 
-    ranking.sort((a, b) => b.score - a.score);
-    ranking = ranking.slice(0, 10);
+    // Escuchar cambios del Ranking Global en tiempo real
+    db.ref('users').orderByChild('highScore').limitToLast(10).on('value', (snap) => {
+      let ranking = [];
+      snap.forEach((childSnap) => {
+        const val = childSnap.val();
+        ranking.push({ name: childSnap.key, score: val.highScore || 0 });
+      });
 
-    localStorage.setItem('trivia_ranking', JSON.stringify(ranking));
+      // Ordenar de mayor a menor
+      ranking.sort((a, b) => b.score - a.score);
 
-    renderRankingTable(ranking);
+      renderRankingTable(ranking);
+    });
   }
 
   function renderRankingTable(ranking) {
@@ -613,14 +626,6 @@
       `;
       tbody.appendChild(row);
     });
-  }
-
-  function clearRanking() {
-    if (confirm("¿Estás seguro de que deseas borrar todo el ranking y las cuentas de usuarios?")) {
-      localStorage.removeItem('trivia_ranking');
-      localStorage.removeItem('trivia_users');
-      renderRankingTable([]);
-    }
   }
 
   function resetToStart() {
