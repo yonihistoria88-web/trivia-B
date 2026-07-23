@@ -71,10 +71,78 @@
       margin-top: 10px;
     }
 
-    .btn-main:disabled {
-      background: #9ca3af;
-      box-shadow: none;
-      cursor: not-allowed;
+    .btn-secondary {
+      background: #64748b;
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    /* Estilos para el Menú Principal Amarillo Claro */
+    .menu-card {
+      background: #FEF08A;
+      color: #713F12;
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 6px 20px rgba(254,240,138,0.5);
+      margin-top: 10px;
+    }
+
+    .menu-card h1 {
+      margin: 0 0 6px 0;
+      font-size: 1.75rem;
+      color: #713F12;
+    }
+
+    .menu-card p {
+      margin: 0 0 20px 0;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .btn-menu-play {
+      background: #2563EB;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .btn-menu-ranking {
+      background: #FFFFFF;
+      color: #713F12;
+      border: 2px solid #CA8A04;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom: 12px;
+    }
+
+    .btn-menu-logout {
+      background: transparent;
+      color: #B45309;
+      border: none;
+      padding: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      text-decoration: underline;
     }
 
     .timer-bar {
@@ -187,7 +255,7 @@
 <body>
 
 <div class="app-container">
-  <!-- Pantalla de Inicio / Login -->
+  <!-- 1. Pantalla de Inicio / Login -->
   <div id="startScreen" class="screen">
     <h1>🎡 Trivia Bíblica</h1>
     <p>Inicia sesión o regístrate para jugar:</p>
@@ -201,10 +269,22 @@
       <div id="cooldownTimer" class="cooldown-timer">15:00</div>
     </div>
 
-    <button id="startBtn" class="btn-main" onclick="handleLoginAndStart()">INGRESAR Y JUGAR</button>
+    <button id="startBtn" class="btn-main" onclick="handleLoginAndStart()">INGRESAR</button>
   </div>
 
-  <!-- Pantalla de Juego -->
+  <!-- 2. Pantalla de Menú Principal (Amarillo Claro) -->
+  <div id="mainMenuScreen" class="screen hidden">
+    <div class="menu-card">
+      <h1 id="welcomeUserText">¡Hola! 👋</h1>
+      <p>¿Qué deseas hacer hoy?</p>
+
+      <button class="btn-menu-play" onclick="startGameFromMenu()">🎮 JUGAR</button>
+      <button class="btn-menu-ranking" onclick="showRankingFromMenu()">🏆 VER RANKING GLOBAL</button>
+      <button class="btn-menu-logout" onclick="resetToStart()">🚪 Cerrar Sesión</button>
+    </div>
+  </div>
+
+  <!-- 3. Pantalla de Juego -->
   <div id="gameScreen" class="screen hidden">
     <div class="timer-bar">
       <div id="timerProgress" class="timer-progress"></div>
@@ -223,12 +303,11 @@
     <div class="options-grid" id="optionsContainer"></div>
   </div>
 
-  <!-- Pantalla de Fin de Juego y Ranking -->
+  <!-- 4. Pantalla de Ranking y Fin de Juego -->
   <div id="endScreen" class="screen hidden">
-    <h2 id="endTitle">🏆 ¡Juego Terminado!</h2>
-    <p id="finalScoreText">Obtuviste 0 puntos</p>
+    <h2 id="endTitle">🏆 Tabla de Posiciones Global</h2>
+    <p id="finalScoreText" class="hidden"></p>
     
-    <h3>🌍 Tabla de Posiciones Global</h3>
     <table class="ranking-table">
       <thead>
         <tr>
@@ -242,12 +321,12 @@
       </tbody>
     </table>
 
-    <button class="btn-main" onclick="resetToStart()">Cerrar Sesión / Volver</button>
+    <button id="backToMenuBtn" class="btn-main" onclick="showMainMenu()">Volver al Menú Principal</button>
   </div>
 </div>
 
 <script>
-  // Configuración de Firebase integrada correctamente
+  // Configuración de Firebase integrada
   const firebaseConfig = {
     apiKey: "AIzaSyCw_ZmUIUICrNA83BmGm_wKm33pzN59DY8",
     authDomain: "trivia-biblica-e174a.firebaseapp.com",
@@ -349,8 +428,35 @@
     currentPlayer = user;
     document.getElementById('userDisplayTag').innerText = "Jugador: " + currentPlayer;
 
+    showMainMenu();
+  }
+
+  function showMainMenu() {
+    hideAllScreens();
+    document.getElementById('welcomeUserText').innerText = `¡Hola, ${currentPlayer}! 👋`;
+    document.getElementById('mainMenuScreen').classList.remove('hidden');
+    checkCooldown();
+  }
+
+  async function startGameFromMenu() {
     if (await checkCooldown()) return;
     initGame();
+  }
+
+  async function showRankingFromMenu() {
+    hideAllScreens();
+    document.getElementById('endTitle').innerText = "🏆 Tabla de Posiciones Global";
+    document.getElementById('finalScoreText').classList.add('hidden');
+    document.getElementById('endScreen').classList.remove('hidden');
+    
+    fetchAndRenderGlobalRanking();
+  }
+
+  function hideAllScreens() {
+    document.getElementById('startScreen').classList.add('hidden');
+    document.getElementById('mainMenuScreen').classList.add('hidden');
+    document.getElementById('gameScreen').classList.add('hidden');
+    document.getElementById('endScreen').classList.add('hidden');
   }
 
   async function checkCooldown() {
@@ -369,7 +475,6 @@
       } else {
         await lockRef.remove();
         document.getElementById('cooldownNotice').classList.add('hidden');
-        document.getElementById('startBtn').disabled = false;
       }
     }
     return false;
@@ -377,7 +482,6 @@
 
   function startCooldownTimer(secondsLeft) {
     document.getElementById('cooldownNotice').classList.remove('hidden');
-    document.getElementById('startBtn').disabled = true;
 
     clearInterval(cooldownInterval);
 
@@ -396,7 +500,6 @@
         clearInterval(cooldownInterval);
         await db.ref('locks/' + currentPlayer).remove();
         document.getElementById('cooldownNotice').classList.add('hidden');
-        document.getElementById('startBtn').disabled = false;
       } else {
         updateDisplay(secondsLeft);
       }
@@ -421,8 +524,7 @@
     await loadQuestions();
     if (questions.length === 0) return;
 
-    document.getElementById('startScreen').classList.add('hidden');
-    document.getElementById('endScreen').classList.add('hidden');
+    hideAllScreens();
     document.getElementById('gameScreen').classList.remove('hidden');
 
     updateLivesUI();
@@ -569,7 +671,7 @@
   }
 
   async function finishGame(lostByLives) {
-    document.getElementById('gameScreen').classList.add('hidden');
+    hideAllScreens();
     document.getElementById('endScreen').classList.remove('hidden');
 
     if (lostByLives) {
@@ -578,7 +680,9 @@
       document.getElementById('endTitle').innerText = "🏆 ¡Completaste todas las preguntas!";
     }
 
-    document.getElementById('finalScoreText').innerText = `${currentPlayer}, tu puntaje final fue: ${totalScore} puntos.`;
+    const scoreText = document.getElementById('finalScoreText');
+    scoreText.classList.remove('hidden');
+    scoreText.innerText = `${currentPlayer}, tu puntaje final fue: ${totalScore} puntos.`;
 
     await saveAndRenderGlobalRanking(currentPlayer, totalScore);
   }
@@ -588,12 +692,14 @@
     const snapshot = await userRef.once('value');
     const userData = snapshot.val();
 
-    // Actualizar puntaje máximo si el nuevo es mayor
     if (userData && score > (userData.highScore || 0)) {
       await userRef.update({ highScore: score });
     }
 
-    // Escuchar cambios del Ranking Global en tiempo real
+    fetchAndRenderGlobalRanking();
+  }
+
+  function fetchAndRenderGlobalRanking() {
     db.ref('users').orderByChild('highScore').limitToLast(10).on('value', (snap) => {
       let ranking = [];
       snap.forEach((childSnap) => {
@@ -601,9 +707,7 @@
         ranking.push({ name: childSnap.key, score: val.highScore || 0 });
       });
 
-      // Ordenar de mayor a menor
       ranking.sort((a, b) => b.score - a.score);
-
       renderRankingTable(ranking);
     });
   }
@@ -629,11 +733,11 @@
   }
 
   function resetToStart() {
-    document.getElementById('endScreen').classList.add('hidden');
+    currentPlayer = "";
+    hideAllScreens();
     document.getElementById('startScreen').classList.remove('hidden');
     document.getElementById('playerPass').value = '';
     document.getElementById('cooldownNotice').classList.add('hidden');
-    document.getElementById('startBtn').disabled = false;
   }
 </script>
 
