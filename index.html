@@ -8,6 +8,9 @@
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  
+  <!-- SweetAlert2 - Sistema de alertas profesionales (GRATIS) -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
     :root {
@@ -68,19 +71,6 @@
       cursor: pointer;
       width: 100%;
       box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-      margin-top: 10px;
-    }
-
-    .btn-secondary {
-      background: #64748b;
-      color: white;
-      border: none;
-      padding: 14px 28px;
-      border-radius: 12px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      width: 100%;
       margin-top: 10px;
     }
 
@@ -341,6 +331,19 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
+  // Función para alertas profesionales y personalizadas (reemplaza alert)
+  function showCustomAlert(title, text, icon = 'info') {
+    Swal.fire({
+      title: title,
+      text: text,
+      icon: icon,
+      confirmButtonColor: '#3b82f6',
+      confirmButtonText: 'Aceptar',
+      background: '#ffffff',
+      backdrop: `rgba(0,0,123,0.1)`
+    });
+  }
+
   let audioCtx = null;
   let tickInterval = null;
 
@@ -403,8 +406,9 @@
     const user = document.getElementById('playerName').value.trim().toLowerCase();
     const pass = document.getElementById('playerPass').value.trim();
 
+    // Reemplazo de alerta nativa por custom alert (Imagen de WhatsApp referencia)
     if (!user || !pass) {
-      alert("Por favor ingresa tanto tu usuario como tu contraseña.");
+      showCustomAlert('🎡 Trivia Bíblica', 'Por favor ingresa tanto tu usuario como tu contraseña.', 'warning');
       return;
     }
 
@@ -414,7 +418,7 @@
 
     if (userData) {
       if (userData.password !== pass) {
-        alert("Contraseña incorrecta para el usuario: " + user);
+        showCustomAlert('🔒 Error', 'Contraseña incorrecta para el usuario: ' + user, 'error');
         return;
       }
     } else {
@@ -422,7 +426,8 @@
         password: pass,
         highScore: 0
       });
-      alert("¡Usuario registrado con éxito! Bienvenido, " + user);
+      // Notificación de éxito profesional
+      showCustomAlert('¡Bienvenido! 👋', '¡Usuario registrado con éxito, ' + user + '!', 'success');
     }
 
     currentPlayer = user;
@@ -511,7 +516,8 @@
       const res = await fetch('preguntas.json');
       questions = await res.json();
     } catch(e) {
-      alert("Error al cargar preguntas.json");
+      // Reemplazo alerta nativa
+      showCustomAlert('😞 Lo sentimos', 'Error al cargar el archivo de preguntas (preguntas.json)', 'error');
     }
   }
 
@@ -736,6 +742,7 @@
     currentPlayer = "";
     hideAllScreens();
     document.getElementById('startScreen').classList.remove('hidden');
+    document.getElementById('playerName').value = ''; // Limpiar campos
     document.getElementById('playerPass').value = '';
     document.getElementById('cooldownNotice').classList.add('hidden');
   }
@@ -743,4 +750,3 @@
 
 </body>
 </html>
-
