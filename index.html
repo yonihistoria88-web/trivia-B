@@ -9,7 +9,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
   
-  <!-- SweetAlert2 - Sistema de alertas profesionales (GRATIS) -->
+  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
@@ -74,7 +74,6 @@
       margin-top: 10px;
     }
 
-    /* Estilos para el Menú Principal Amarillo Claro */
     .menu-card {
       background: #FEF08A;
       color: #713F12;
@@ -84,17 +83,8 @@
       margin-top: 10px;
     }
 
-    .menu-card h1 {
-      margin: 0 0 6px 0;
-      font-size: 1.75rem;
-      color: #713F12;
-    }
-
-    .menu-card p {
-      margin: 0 0 20px 0;
-      font-size: 1rem;
-      opacity: 0.9;
-    }
+    .menu-card h1 { margin: 0 0 6px 0; font-size: 1.75rem; color: #713F12; }
+    .menu-card p { margin: 0 0 20px 0; font-size: 1rem; opacity: 0.9; }
 
     .btn-menu-play {
       background: #2563EB;
@@ -107,6 +97,20 @@
       cursor: pointer;
       width: 100%;
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      margin-bottom: 12px;
+    }
+
+    .btn-menu-duel {
+      background: #DC2626;
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      cursor: pointer;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
       margin-bottom: 12px;
     }
 
@@ -135,6 +139,21 @@
       text-decoration: underline;
     }
 
+    .btn-share-ws {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
     .timer-bar {
       width: 100%;
       height: 12px;
@@ -160,28 +179,11 @@
       font-size: 0.9rem;
     }
 
-    .category-badge {
-      background: #e0e7ff;
-      color: #3730a3;
-      padding: 6px 12px;
-      border-radius: 20px;
-    }
-
+    .category-badge { background: #e0e7ff; color: #3730a3; padding: 6px 12px; border-radius: 20px; }
     .lives-badge { font-size: 1.1rem; }
 
-    .question-card {
-      font-size: 1.15rem;
-      margin-bottom: 24px;
-      line-height: 1.4;
-      font-weight: 600;
-      text-align: left;
-    }
-
-    .options-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .question-card { font-size: 1.15rem; margin-bottom: 24px; line-height: 1.4; font-weight: 600; text-align: left; }
+    .options-grid { display: flex; flex-direction: column; gap: 12px; }
 
     .btn-option {
       background: #f8fafc;
@@ -194,30 +196,11 @@
       font-weight: 500;
     }
 
-    .btn-option.correct {
-      background: #dcfce7;
-      border-color: var(--success);
-      color: #15803d;
-    }
+    .btn-option.correct { background: #dcfce7; border-color: var(--success); color: #15803d; }
+    .btn-option.wrong { background: #fee2e2; border-color: var(--danger); color: #b91c1c; }
 
-    .btn-option.wrong {
-      background: #fee2e2;
-      border-color: var(--danger);
-      color: #b91c1c;
-    }
-
-    .ranking-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-    }
-
-    .ranking-table th, .ranking-table td {
-      padding: 10px;
-      border-bottom: 1px solid #e2e8f0;
-      text-align: left;
-    }
-
+    .ranking-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .ranking-table th, .ranking-table td { padding: 10px; border-bottom: 1px solid #e2e8f0; text-align: left; }
     .ranking-table th { background: #f8fafc; }
 
     .cooldown-box {
@@ -229,16 +212,17 @@
       margin: 15px 0;
     }
 
-    .cooldown-timer {
-      font-size: 1.8rem;
-      font-weight: bold;
-      margin-top: 5px;
-    }
+    .cooldown-timer { font-size: 1.8rem; font-weight: bold; margin-top: 5px; }
+    .user-tag { font-size: 0.85rem; color: #6b7280; margin-bottom: 10px; }
 
-    .user-tag {
-      font-size: 0.85rem;
-      color: #6b7280;
-      margin-bottom: 10px;
+    .duel-score-box {
+      display: flex;
+      justify-content: space-around;
+      background: #f1f5f9;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -262,19 +246,20 @@
     <button id="startBtn" class="btn-main" onclick="handleLoginAndStart()">INGRESAR</button>
   </div>
 
-  <!-- 2. Pantalla de Menú Principal (Amarillo Claro) -->
+  <!-- 2. Pantalla de Menú Principal -->
   <div id="mainMenuScreen" class="screen hidden">
     <div class="menu-card">
       <h1 id="welcomeUserText">¡Hola! 👋</h1>
       <p>¿Qué deseas hacer hoy?</p>
 
-      <button class="btn-menu-play" onclick="startGameFromMenu()">🎮 JUGAR</button>
+      <button class="btn-menu-play" onclick="startGameFromMenu()">🎮 MODO SOLITARIO</button>
+      <button class="btn-menu-duel" onclick="showDuelMenu()">⚔️ MODO DUELO (1v1)</button>
       <button class="btn-menu-ranking" onclick="showRankingFromMenu()">🏆 VER RANKING GLOBAL</button>
       <button class="btn-menu-logout" onclick="resetToStart()">🚪 Cerrar Sesión</button>
     </div>
   </div>
 
-  <!-- 3. Pantalla de Juego -->
+  <!-- 3. Pantalla de Juego Solitario / Duelo -->
   <div id="gameScreen" class="screen hidden">
     <div class="timer-bar">
       <div id="timerProgress" class="timer-progress"></div>
@@ -282,12 +267,20 @@
 
     <div class="user-tag" id="userDisplayTag">Jugador: -</div>
 
+    <div id="duelScoreHeader" class="duel-score-box hidden">
+      <span id="p1ScoreTag">P1: 0</span>
+      <span id="questionCountTag">Pregunta: 1/40</span>
+      <span id="p2ScoreTag">P2: 0</span>
+    </div>
+
     <div class="header-info">
       <span id="livesBadge" class="lives-badge">❤️❤️❤️</span>
       <span id="categoryBadge" class="category-badge">Cargando...</span>
       <span id="scoreBadge">⭐ 0 pts</span>
-      <span id="timerText">⏱️ 90s</span>
+      <span id="timerText">⏱️ 30s</span>
     </div>
+
+    <div id="turnBanner" style="font-weight: bold; margin-bottom: 10px; color: #dc2626;" class="hidden"></div>
 
     <div class="question-card" id="questionText">Cargando pregunta...</div>
     <div class="options-grid" id="optionsContainer"></div>
@@ -298,7 +291,7 @@
     <h2 id="endTitle">🏆 Tabla de Posiciones Global</h2>
     <p id="finalScoreText" class="hidden"></p>
     
-    <table class="ranking-table">
+    <table class="ranking-table" id="rankingTableContainer">
       <thead>
         <tr>
           <th>#</th>
@@ -316,7 +309,9 @@
 </div>
 
 <script>
-  // Configuración de Firebase integrada
+  // Tu enlace oficial acortado
+  const GAME_URL = "https://tinyurl.com/Juegotriviabiblica";
+
   const firebaseConfig = {
     apiKey: "AIzaSyCw_ZmUIUICrNA83BmGm_wKm33pzN59DY8",
     authDomain: "trivia-biblica-e174a.firebaseapp.com",
@@ -327,20 +322,16 @@
     appId: "1:55954319312:web:c2f7a599c4381bad113bd5"
   };
 
-  // Inicializar Firebase
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // Función para alertas profesionales y personalizadas (reemplaza alert)
   function showCustomAlert(title, text, icon = 'info') {
     Swal.fire({
       title: title,
       text: text,
       icon: icon,
       confirmButtonColor: '#3b82f6',
-      confirmButtonText: 'Aceptar',
-      background: '#ffffff',
-      backdrop: `rgba(0,0,123,0.1)`
+      confirmButtonText: 'Aceptar'
     });
   }
 
@@ -387,14 +378,17 @@
   let questions = [];
   let askedQuestions = [];
   let currentQuestion = null;
-  let timeLeft = 90;
-  let maxTime = 90;
+  let timeLeft = 30;
+  let maxTime = 30;
   let timerInterval;
   
   let currentPlayer = "";
   let totalScore = 0;
   let lives = 3;
-  
+  let isDuelMode = false;
+  let currentRoomCode = null;
+  let duelListener = null;
+
   const COOLDOWN_MINUTES = 15;
   let cooldownInterval = null;
 
@@ -406,7 +400,6 @@
     const user = document.getElementById('playerName').value.trim().toLowerCase();
     const pass = document.getElementById('playerPass').value.trim();
 
-    // Reemplazo de alerta nativa por custom alert (Imagen de WhatsApp referencia)
     if (!user || !pass) {
       showCustomAlert('🎡 Trivia Bíblica', 'Por favor ingresa tanto tu usuario como tu contraseña.', 'warning');
       return;
@@ -422,25 +415,248 @@
         return;
       }
     } else {
-      await userRef.set({
-        password: pass,
-        highScore: 0
-      });
-      // Notificación de éxito profesional
+      await userRef.set({ password: pass, highScore: 0 });
       showCustomAlert('¡Bienvenido! 👋', '¡Usuario registrado con éxito, ' + user + '!', 'success');
     }
 
     currentPlayer = user;
     document.getElementById('userDisplayTag').innerText = "Jugador: " + currentPlayer;
-
     showMainMenu();
   }
 
   function showMainMenu() {
     hideAllScreens();
+    if (duelListener && currentRoomCode) {
+      db.ref('duels/' + currentRoomCode).off('value', duelListener);
+    }
+    isDuelMode = false;
     document.getElementById('welcomeUserText').innerText = `¡Hola, ${currentPlayer}! 👋`;
     document.getElementById('mainMenuScreen').classList.remove('hidden');
     checkCooldown();
+  }
+
+  async function showDuelMenu() {
+    const { value: action } = await Swal.fire({
+      title: '⚔️ Modo Duelo 1v1',
+      text: '¿Qué deseas hacer?',
+      showCancelButton: true,
+      confirmButtonText: 'Crear Duelo',
+      cancelButtonText: 'Unirme a un Duelo',
+      confirmButtonColor: '#dc2626',
+      cancelButtonColor: '#2563eb'
+    });
+
+    if (action) {
+      createDuelRoom();
+    } else if (action === false) {
+      joinDuelRoom();
+    }
+  }
+
+  async function createDuelRoom() {
+    const roomCode = Math.floor(1000 + Math.random() * 9000).toString();
+    currentRoomCode = roomCode;
+    isDuelMode = true;
+
+    await loadQuestions();
+
+    const roomData = {
+      p1: currentPlayer,
+      p2: "",
+      scoreP1: 0,
+      scoreP2: 0,
+      currentTurn: currentPlayer,
+      questionIndex: 0,
+      totalQuestions: 40,
+      status: "waiting",
+      questions: askedQuestions
+    };
+
+    await db.ref('duels/' + roomCode).set(roomData);
+
+    const shareMessage = `⚔️ ¡Te desafío a un Duelo de Trivia Bíblica!\n\nA ver quién responde mejor las 40 preguntas.\n\n📲 Entra al juego aquí: ${GAME_URL}\n🔑 Código del Duelo: ${roomCode}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+
+    Swal.fire({
+      title: 'Código de Duelo: ' + roomCode,
+      showConfirmButton: false,
+      allowOutsideClick: false,
+      html: `
+        <h2 style="font-size:2.8rem; color:#dc2626; margin: 10px 0;">${roomCode}</h2>
+        <p>Comparte este código con tu rival para empezar:</p>
+        
+        <a href="${whatsappUrl}" target="_blank" style="text-decoration:none;">
+          <button class="btn-share-ws">
+            📲 Compartir por WhatsApp
+          </button>
+        </a>
+        <br><br>
+        <p style="font-size:0.85rem; color:#6b7280;">Esperando a que se conecte el contrincante...</p>
+      `
+    });
+
+    listenDuelRoom(roomCode);
+  }
+
+  async function joinDuelRoom() {
+    const { value: code } = await Swal.fire({
+      title: 'Ingresa el Código de 4 dígitos',
+      input: 'text',
+      inputPlaceholder: 'Ejemplo: 4821',
+      showCancelButton: true,
+      confirmButtonText: 'Unirme',
+      inputValidator: (value) => {
+        if (!value || value.length !== 4) return 'Debes ingresar un código de 4 dígitos';
+      }
+    });
+
+    if (code) {
+      const snap = await db.ref('duels/' + code).once('value');
+      const data = snap.val();
+
+      if (!data) {
+        showCustomAlert('Error', 'El código de sala no existe.', 'error');
+        return;
+      }
+
+      if (data.p2 && data.p2 !== currentPlayer) {
+        showCustomAlert('Sala Llena', 'Esta partida ya tiene dos jugadores.', 'warning');
+        return;
+      }
+
+      currentRoomCode = code;
+      isDuelMode = true;
+
+      await db.ref('duels/' + code).update({ p2: currentPlayer, status: "playing" });
+      listenDuelRoom(code);
+    }
+  }
+
+  function listenDuelRoom(code) {
+    const roomRef = db.ref('duels/' + code);
+    
+    duelListener = roomRef.on('value', async (snap) => {
+      const data = snap.val();
+      if (!data) return;
+
+      if (data.status === "playing") {
+        Swal.close();
+        if (questions.length === 0) await loadQuestions();
+        startDuelScreen(data);
+      } else if (data.status === "finished") {
+        finishDuelGame(data);
+      }
+    });
+  }
+
+  function startDuelScreen(data) {
+    hideAllScreens();
+    document.getElementById('gameScreen').classList.remove('hidden');
+    document.getElementById('duelScoreHeader').classList.remove('hidden');
+    document.getElementById('turnBanner').classList.remove('hidden');
+    document.getElementById('livesBadge').classList.add('hidden');
+    document.getElementById('scoreBadge').classList.add('hidden');
+
+    document.getElementById('p1ScoreTag').innerText = `${data.p1}: ${data.scoreP1}`;
+    document.getElementById('p2ScoreTag').innerText = `${data.p2}: ${data.scoreP2}`;
+    document.getElementById('questionCountTag').innerText = `Pregunta: ${data.questionIndex + 1}/40`;
+
+    const isMyTurn = data.currentTurn === currentPlayer;
+    const banner = document.getElementById('turnBanner');
+
+    if (isMyTurn) {
+      banner.innerText = "🎯 ¡ES TU TURNO DE RESPONDER!";
+      banner.style.color = "#16a34a";
+    } else {
+      banner.innerText = `⏳ Turno de ${data.currentTurn}... ¡Atento!`;
+      banner.style.color = "#dc2626";
+    }
+
+    renderDuelQuestion(data, isMyTurn);
+  }
+
+  function renderDuelQuestion(data, isMyTurn) {
+    currentQuestion = questions[data.questionIndex % questions.length];
+
+    document.getElementById('categoryBadge').innerText = currentQuestion.categoria || 'Duelo';
+    document.getElementById('questionText').innerText = currentQuestion.pregunta;
+
+    const container = document.getElementById('optionsContainer');
+    container.innerHTML = '';
+
+    let optionsWithIndex = currentQuestion.opciones.map((op, idx) => ({
+      texto: limpiarOpcion(op),
+      esCorrecta: idx === currentQuestion.correcta
+    }));
+
+    optionsWithIndex.forEach((item) => {
+      const btn = document.createElement('button');
+      btn.className = 'btn-option';
+      btn.innerText = item.texto;
+      btn.disabled = !isMyTurn;
+      btn.onclick = () => handleDuelAnswer(item.esCorrecta, data);
+      container.appendChild(btn);
+    });
+
+    startQuestionTimer(30, isMyTurn);
+  }
+
+  async function handleDuelAnswer(isCorrect, data) {
+    clearInterval(timerInterval);
+    clearInterval(tickInterval);
+
+    const isP1 = currentPlayer === data.p1;
+    const rival = isP1 ? data.p2 : data.p1;
+
+    let newScoreP1 = data.scoreP1;
+    let newScoreP2 = data.scoreP2;
+    let nextTurn = data.currentTurn;
+
+    if (isCorrect) {
+      playCorrectSound();
+      if (isP1) newScoreP1++; else newScoreP2++;
+    } else {
+      playWrongSound();
+      nextTurn = rival;
+    }
+
+    const nextQIndex = data.questionIndex + 1;
+
+    if (nextQIndex >= 40) {
+      await db.ref('duels/' + currentRoomCode).update({
+        scoreP1: newScoreP1,
+        scoreP2: newScoreP2,
+        status: "finished"
+      });
+    } else {
+      await db.ref('duels/' + currentRoomCode).update({
+        scoreP1: newScoreP1,
+        scoreP2: newScoreP2,
+        currentTurn: nextTurn,
+        questionIndex: nextQIndex
+      });
+    }
+  }
+
+  function finishDuelGame(data) {
+    clearInterval(timerInterval);
+    clearInterval(tickInterval);
+    hideAllScreens();
+    document.getElementById('endScreen').classList.remove('hidden');
+    document.getElementById('rankingTableContainer').classList.add('hidden');
+
+    let title = "";
+    if (data.scoreP1 === data.scoreP2) {
+      title = "🤝 ¡EMPATE PERFECTO!";
+    } else {
+      const winner = data.scoreP1 > data.scoreP2 ? data.p1 : data.p2;
+      title = winner === currentPlayer ? "🏆 ¡VICTORIA! GANASTE EL DUELO" : "💔 HAS SIDO DERROTADO";
+    }
+
+    document.getElementById('endTitle').innerText = title;
+    const scoreText = document.getElementById('finalScoreText');
+    scoreText.classList.remove('hidden');
+    scoreText.innerText = `Resultado final:\n${data.p1}: ${data.scoreP1} pts | ${data.p2}: ${data.scoreP2} pts`;
   }
 
   async function startGameFromMenu() {
@@ -452,8 +668,8 @@
     hideAllScreens();
     document.getElementById('endTitle').innerText = "🏆 Tabla de Posiciones Global";
     document.getElementById('finalScoreText').classList.add('hidden');
+    document.getElementById('rankingTableContainer').classList.remove('hidden');
     document.getElementById('endScreen').classList.remove('hidden');
-    
     fetchAndRenderGlobalRanking();
   }
 
@@ -462,6 +678,10 @@
     document.getElementById('mainMenuScreen').classList.add('hidden');
     document.getElementById('gameScreen').classList.add('hidden');
     document.getElementById('endScreen').classList.add('hidden');
+    document.getElementById('duelScoreHeader').classList.add('hidden');
+    document.getElementById('turnBanner').classList.add('hidden');
+    document.getElementById('livesBadge').classList.remove('hidden');
+    document.getElementById('scoreBadge').classList.remove('hidden');
   }
 
   async function checkCooldown() {
@@ -516,8 +736,7 @@
       const res = await fetch('preguntas.json');
       questions = await res.json();
     } catch(e) {
-      // Reemplazo alerta nativa
-      showCustomAlert('😞 Lo sentimos', 'Error al cargar el archivo de preguntas (preguntas.json)', 'error');
+      showCustomAlert('😞 Lo sentimos', 'Error al cargar preguntas.json', 'error');
     }
   }
 
@@ -541,9 +760,7 @@
   function calculatePoints(secondsTaken) {
     if (secondsTaken <= 10) return 10;
     if (secondsTaken <= 30) return 7;
-    if (secondsTaken <= 60) return 5;
-    if (secondsTaken <= 90) return 3;
-    return 0;
+    return 3;
   }
 
   function updateLivesUI() {
@@ -597,10 +814,10 @@
       container.appendChild(btn);
     });
 
-    startQuestionTimer(90);
+    startQuestionTimer(30, true);
   }
 
-  function startQuestionTimer(seconds) {
+  function startQuestionTimer(seconds, isMyTurn) {
     maxTime = seconds;
     timeLeft = seconds;
     clearInterval(timerInterval);
@@ -608,9 +825,11 @@
 
     updateTimerUI();
 
-    tickInterval = setInterval(() => {
-      if (timeLeft <= 10) playTickSound();
-    }, 1000);
+    if (isMyTurn) {
+      tickInterval = setInterval(() => {
+        if (timeLeft <= 5) playTickSound();
+      }, 1000);
+    }
 
     timerInterval = setInterval(() => {
       timeLeft--;
@@ -619,7 +838,13 @@
       if (timeLeft <= 0) {
         clearInterval(timerInterval);
         clearInterval(tickInterval);
-        onTimeOut();
+        if (isDuelMode && isMyTurn) {
+          db.ref('duels/' + currentRoomCode).once('value', (snap) => {
+            handleDuelAnswer(false, snap.val());
+          });
+        } else if (!isDuelMode) {
+          onTimeOut();
+        }
       }
     }, 1000);
   }
@@ -656,18 +881,14 @@
       updateLivesUI();
     }
 
-    setTimeout(() => {
-      nextQuestion();
-    }, 1200);
+    setTimeout(() => { nextQuestion(); }, 1200);
   }
 
   function onTimeOut() {
     playWrongSound();
     lives--;
     updateLivesUI();
-    setTimeout(() => {
-      nextQuestion();
-    }, 1200);
+    setTimeout(() => { nextQuestion(); }, 1200);
   }
 
   async function triggerCooldownAndEnd() {
@@ -742,7 +963,7 @@
     currentPlayer = "";
     hideAllScreens();
     document.getElementById('startScreen').classList.remove('hidden');
-    document.getElementById('playerName').value = ''; // Limpiar campos
+    document.getElementById('playerName').value = '';
     document.getElementById('playerPass').value = '';
     document.getElementById('cooldownNotice').classList.add('hidden');
   }
