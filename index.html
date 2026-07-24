@@ -139,6 +139,52 @@
       text-decoration: underline;
     }
 
+    /* Lista de Duelos */
+    .duel-card {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      text-align: left;
+    }
+
+    .duel-card-header {
+      display: flex;
+      justify-content: space-between;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+
+    .duel-card-scores {
+      font-size: 0.85rem;
+      color: #4b5563;
+    }
+
+    .btn-play-turn {
+      background: #22c55e;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-wait-turn {
+      background: #cbd5e1;
+      color: #475569;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: not-allowed;
+    }
+
     .timer-bar {
       width: 100%;
       height: 12px;
@@ -238,13 +284,36 @@
       <p>¿Qué deseas hacer hoy?</p>
 
       <button class="btn-menu-play" onclick="startGameFromMenu()">🎮 MODO SOLITARIO</button>
-      <button class="btn-menu-duel" onclick="showDuelMenu()">⚔️ MODO DUELO (Por Turnos)</button>
+      <button class="btn-menu-duel" onclick="showDuelListScreen()">⚔️ MODO DUELO (Por Turnos)</button>
       <button class="btn-menu-ranking" onclick="showRankingFromMenu()">🏆 VER RANKING GLOBAL</button>
       <button class="btn-menu-logout" onclick="resetToStart()">🚪 Cerrar Sesión</button>
     </div>
   </div>
 
-  <!-- 3. Pantalla de Juego -->
+  <!-- 3. Pantalla de Lista de Duelos -->
+  <div id="duelListScreen" class="screen hidden">
+    <h2>⚔️ Mis Duelos</h2>
+    <button class="btn-main" style="background:#dc2626; margin-bottom: 15px;" onclick="createNewDuel()">➕ Crear Nuevo Duelo</button>
+
+    <div style="margin: 15px 0;">
+      <small style="color:#6b7280;">¿Tienes un código de amigo?</small>
+      <div style="display:flex; gap: 8px; margin-top: 4px;">
+        <input type="text" id="manualCodeInput" placeholder="PIN 4 dígitos" maxlength="4" style="margin:0;">
+        <button style="background:#2563eb; color:white; border:none; padding:0 16px; border-radius:10px; font-weight:bold;" onclick="joinDuelByManualCode()">Unirme</button>
+      </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
+
+    <h3>Partidas en curso:</h3>
+    <div id="duelsContainer">
+      <p style="color:#6b7280;">Cargando tus partidas...</p>
+    </div>
+
+    <button class="btn-main" style="background:#64748b; margin-top:15px;" onclick="showMainMenu()">Volver al Menú</button>
+  </div>
+
+  <!-- 4. Pantalla de Juego -->
   <div id="gameScreen" class="screen hidden">
     <div class="timer-bar">
       <div id="timerProgress" class="timer-progress"></div>
@@ -271,7 +340,7 @@
     <div class="options-grid" id="optionsContainer"></div>
   </div>
 
-  <!-- 4. Pantalla de Ranking y Fin de Juego -->
+  <!-- 5. Pantalla de Ranking y Fin de Juego -->
   <div id="endScreen" class="screen hidden">
     <h2 id="endTitle">🏆 Tabla de Posiciones Global</h2>
     <p id="finalScoreText" class="hidden"></p>
@@ -415,30 +484,73 @@
     checkCooldown();
   }
 
-  async function showDuelMenu() {
-    const result = await Swal.fire({
-      title: '⚔️ Modo Duelo por Turnos',
-      text: '¿Qué deseas hacer?',
-      showCancelButton: true,
-      confirmButtonText: 'Crear Duelo',
-      cancelButtonText: 'Unirme / Continuar',
-      confirmButtonColor: '#dc2626',
-      cancelButtonColor: '#2563eb'
-    });
-
-    if (result.isConfirmed) {
-      createDuelRoom();
-    } else if (result.dismiss === Swal.DismissReason.cancel) {
-      joinDuelRoom();
-    }
+  async function showDuelListScreen() {
+    hideAllScreens();
+    document.getElementById('duelListScreen').classList.remove('hidden');
+    loadUserDuels();
   }
 
-  async function createDuelRoom() {
+  function loadUserDuels() {
+    const container = document.getElementById('duelsContainer');
+    container.innerHTML = "<p style='color:#6b7280;'>Cargando partidas...</p>";
+
+    db.ref('duels').on('value', (snapshot) => {
+      container.innerHTML = "";
+      const duels = snapshot.val();
+      let hasDuels = false;
+
+      if (duels) {
+        Object.keys(duels).forEach((code) => {
+          const duel = duels[code];
+          if (duel.p1 === currentPlayer || duel.p2 === currentPlayer) {
+            hasDuels = true;
+            const isP1 = currentPlayer === duel.p1;
+            const rival = isP1 ? duel.p2 : duel.p1;
+            const myScore = isP1 ? duel.scoreP1 : duel.scoreP2;
+            const rivalScore = isP1 ? duel.scoreP2 : duel.scoreP1;
+            const isMyTurn = duel.currentTurn === currentPlayer;
+
+            const card = document.createElement('div');
+            card.className = 'duel-card';
+
+            let actionButton = '';
+
+            if (duel.status === "finished") {
+              actionButton = `<button class="btn-wait-turn" style="background:#e2e8f0; color:#64748b;" onclick="openDuelGame('${code}')">🏁 Ver Resultado Final</button>`;
+            } else if (isMyTurn) {
+              actionButton = `<button class="btn-play-turn" onclick="openDuelGame('${code}')">🎮 ¡ES TU TURNO! JUGAR</button>`;
+            } else {
+              actionButton = `<button class="btn-wait-turn">⏳ Turno de ${rival}</button>`;
+            }
+
+            card.innerHTML = `
+              <div class="duel-card-header">
+                <span>⚔️ vs ${rival}</span>
+                <span style="color:#6b7280; font-size:0.8rem;">PIN: ${code}</span>
+              </div>
+              <div class="duel-card-scores">
+                Tú: <strong>${myScore} pts</strong> | ${rival}: <strong>${rivalScore} pts</strong>
+              </div>
+              ${actionButton}
+            `;
+
+            container.appendChild(card);
+          }
+        });
+      }
+
+      if (!hasDuels) {
+        container.innerHTML = "<p style='color:#6b7280;'>No tienes duelos activos en este momento.</p>";
+      }
+    });
+  }
+
+  async function createNewDuel() {
     const roomCode = Math.floor(1000 + Math.random() * 9000).toString();
     currentRoomCode = roomCode;
     isDuelMode = true;
 
-    await loadQuestions();
+    if (questions.length === 0) await loadQuestions();
 
     const roomData = {
       p1: currentPlayer,
@@ -452,53 +564,47 @@
     };
 
     await db.ref('duels/' + roomCode).set(roomData);
-
     startDuelTurn(roomData);
   }
 
-  async function joinDuelRoom() {
-    const { value: code } = await Swal.fire({
-      title: 'Ingresa el Código de Duelo',
-      input: 'text',
-      inputPlaceholder: 'Ejemplo: 4821',
-      showCancelButton: true,
-      confirmButtonText: 'Cargar Partida',
-      cancelButtonText: 'Cancelar',
-      inputValidator: (value) => {
-        if (!value || value.length !== 4) return 'Ingresa un código válido de 4 dígitos';
-      }
-    });
-
-    if (code) {
-      const snap = await db.ref('duels/' + code).once('value');
-      const data = snap.val();
-
-      if (!data) {
-        showCustomAlert('Error', 'No existe ninguna partida con ese código.', 'error');
-        return;
-      }
-
-      if (data.status === "finished") {
-        finishDuelGame(data);
-        return;
-      }
-
-      if (data.p2 === "Esperando..." && data.p1 !== currentPlayer) {
-        await db.ref('duels/' + code).update({ p2: currentPlayer });
-        data.p2 = currentPlayer;
-      }
-
-      currentRoomCode = code;
-      isDuelMode = true;
-
-      if (data.currentTurn !== currentPlayer) {
-        showCustomAlert('⏳ No es tu turno', `Le toca jugar a ${data.currentTurn}. ¡Vuelve más tarde o avísale!`, 'info');
-        return;
-      }
-
-      if (questions.length === 0) await loadQuestions();
-      startDuelTurn(data);
+  async function joinDuelByManualCode() {
+    const code = document.getElementById('manualCodeInput').value.trim();
+    if (code.length !== 4) {
+      showCustomAlert('Error', 'Ingresa un código válido de 4 dígitos.', 'warning');
+      return;
     }
+    openDuelGame(code);
+  }
+
+  async function openDuelGame(code) {
+    const snap = await db.ref('duels/' + code).once('value');
+    const data = snap.val();
+
+    if (!data) {
+      showCustomAlert('Error', 'No existe ninguna partida con ese código.', 'error');
+      return;
+    }
+
+    if (data.status === "finished") {
+      finishDuelGame(data);
+      return;
+    }
+
+    if (data.p2 === "Esperando..." && data.p1 !== currentPlayer) {
+      await db.ref('duels/' + code).update({ p2: currentPlayer });
+      data.p2 = currentPlayer;
+    }
+
+    currentRoomCode = code;
+    isDuelMode = true;
+
+    if (data.currentTurn !== currentPlayer) {
+      showCustomAlert('⏳ No es tu turno', `Le toca jugar a ${data.currentTurn}. ¡Vuelve más tarde o avísale!`, 'info');
+      return;
+    }
+
+    if (questions.length === 0) await loadQuestions();
+    startDuelTurn(data);
   }
 
   function startDuelTurn(data) {
@@ -610,9 +716,9 @@
             </button>
           </a>
         `,
-        confirmButtonText: 'Volver al Menú Principal'
+        confirmButtonText: 'Volver a Mis Duelos'
       }).then(() => {
-        showMainMenu();
+        showDuelListScreen();
       });
     }
   }
@@ -655,6 +761,7 @@
   function hideAllScreens() {
     document.getElementById('startScreen').classList.add('hidden');
     document.getElementById('mainMenuScreen').classList.add('hidden');
+    document.getElementById('duelListScreen').classList.add('hidden');
     document.getElementById('gameScreen').classList.add('hidden');
     document.getElementById('endScreen').classList.add('hidden');
     document.getElementById('duelScoreHeader').classList.add('hidden');
