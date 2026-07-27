@@ -139,7 +139,6 @@
       text-decoration: underline;
     }
 
-    /* Lista de Duelos */
     .duel-card {
       background: #f8fafc;
       border: 2px solid #e2e8f0;
@@ -564,7 +563,18 @@
     };
 
     await db.ref('duels/' + roomCode).set(roomData);
-    startDuelTurn(roomData);
+    
+    Swal.fire({
+      title: '⚔️ Duelo Creado',
+      html: `
+        <p>Tu código de duelo es: <b style="font-size:1.5rem; color:#dc2626;">${roomCode}</b></p>
+        <p>¡Inicias tú! Cuando te equivoques, podrás compartirle el código a tu rival.</p>
+      `,
+      icon: 'success',
+      confirmButtonText: '¡Empezar a Jugar!'
+    }).then(() => {
+      startDuelTurn(roomData);
+    });
   }
 
   async function joinDuelByManualCode() {
@@ -578,10 +588,10 @@
 
   async function openDuelGame(code) {
     const snap = await db.ref('duels/' + code).once('value');
-    const data = snap.val();
+    let data = snap.val();
 
     if (!data) {
-      showCustomAlert('Error', 'No existe ninguna partida con ese código.', 'error');
+      showCustomAlert('Error', 'No existe ninguna partida con ese código: ' + code, 'error');
       return;
     }
 
@@ -590,6 +600,7 @@
       return;
     }
 
+    // Si aún no hay Jugador 2 y entra una persona que no es Jugador 1
     if (data.p2 === "Esperando..." && data.p1 !== currentPlayer) {
       await db.ref('duels/' + code).update({ p2: currentPlayer });
       data.p2 = currentPlayer;
@@ -656,7 +667,7 @@
     clearInterval(tickInterval);
 
     const isP1 = currentPlayer === data.p1;
-    const rival = isP1 ? data.p2 : data.p1;
+    let rival = isP1 ? data.p2 : data.p1;
 
     let newScoreP1 = data.scoreP1;
     let newScoreP2 = data.scoreP2;
@@ -696,8 +707,14 @@
     } else {
       playWrongSound();
 
+      // Si aún no se ha unido nadie, dejamos el turno apuntando al lugar que tomará el P2
+      let targetNextTurn = rival;
+      if (rival === "Esperando...") {
+        targetNextTurn = "rival"; 
+      }
+
       await db.ref('duels/' + currentRoomCode).update({
-        currentTurn: rival,
+        currentTurn: targetNextTurn,
         questionIndex: nextQIndex
       });
 
@@ -708,8 +725,8 @@
         title: '❌ ¡Te equivocaste!',
         icon: 'error',
         html: `
-          <p>Tu turno ha terminado. Ahora le toca a <strong>${rival}</strong>.</p>
-          <p>Compartir el código para avisarle:</p>
+          <p>Tu turno ha terminado.</p>
+          <p>Comparte el PIN de 4 dígitos a tu amigo para que juegue:</p>
           <a href="${whatsappUrl}" target="_blank" style="text-decoration:none;">
             <button class="btn-share-ws" style="background:#25D366; color:white; border:none; padding:12px; border-radius:8px; font-weight:bold; cursor:pointer;">
               📲 Avisar por WhatsApp
